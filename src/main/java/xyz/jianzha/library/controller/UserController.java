@@ -11,14 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 用户登录表(User)表控制层
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 20:03
  */
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 @RestController
 @RequestMapping("user")
 public class UserController extends ApiController {
@@ -82,5 +83,18 @@ public class UserController extends ApiController {
     @DeleteMapping
     public R delete(@RequestParam("idList") List<Long> idList) {
         return success(this.userService.removeByIds(idList));
+    }
+
+    @PostMapping("/login")
+    public R login(@RequestBody User user) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("stuID", user.getStuid())
+                .eq("password", user.getPassword());
+        user = this.userService.getOne(queryWrapper);
+        if (!Objects.isNull(user)) {
+            return success(user);
+        }else {
+            return failed("请输入正确的账号和密码");
+        }
     }
 }

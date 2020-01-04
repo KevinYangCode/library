@@ -1,5 +1,7 @@
 package xyz.jianzha.library.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.io.Serializable;
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
  * 图书分类表(Classify)表实体类
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 20:03
  */
 @SuppressWarnings("serial")
 @Data
@@ -24,13 +26,14 @@ public class Classify extends Model<Classify> {
     /**
      * 图书类别号
      */
+    @TableId(type = IdType.AUTO)
     private Integer classId;
-
+    
     /**
      * 图书类别名
-     */
+     */    
     private String className;
-
+    
     /**
      * 获取主键值
      *
@@ -40,4 +43,4 @@ public class Classify extends Model<Classify> {
     protected Serializable pkVal() {
         return this.classId;
     }
-}
+    }

@@ -16,9 +16,9 @@ import java.util.List;
  * 图书分类表(Classify)表控制层
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 20:03
  */
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 @RestController
 @RequestMapping("classify")
 public class ClassifyController extends ApiController {

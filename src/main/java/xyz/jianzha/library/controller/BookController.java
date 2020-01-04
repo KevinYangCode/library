@@ -16,9 +16,9 @@ import java.util.List;
  * 图书书目表(Book)表控制层
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 20:03
  */
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 @RestController
 @RequestMapping("book")
 public class BookController extends ApiController {

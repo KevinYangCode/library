@@ -1,5 +1,7 @@
 package xyz.jianzha.library.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.io.Serializable;
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
  * 新书采购意向表(Intention)表实体类
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 20:03
  */
 @SuppressWarnings("serial")
 @Data
@@ -24,6 +26,7 @@ public class Intention extends Model<Intention> {
     /**
      * 新书采购意向ID
      */
+    @TableId(type = IdType.AUTO)
     private Integer inteId;
 
     /**

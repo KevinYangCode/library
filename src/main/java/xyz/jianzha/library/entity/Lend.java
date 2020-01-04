@@ -1,5 +1,7 @@
 package xyz.jianzha.library.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.io.Serializable;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
  * 借阅信息表(Lend)表实体类
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 20:03
  */
 @SuppressWarnings("serial")
 @Data
@@ -25,28 +27,29 @@ public class Lend extends Model<Lend> {
     /**
      * 借阅记录ID
      */
+    @TableId(type = IdType.AUTO)
     private Integer lendId;
-
+    
     /**
      * 图书ID
-     */
+     */    
     private Integer bookId;
-
+    
     /**
      * 读者ID
-     */
+     */    
     private String readerId;
-
+    
     /**
      * 借出日期
-     */
+     */    
     private Date lendDate;
-
+    
     /**
      * 归还日期
-     */
+     */    
     private Date backDate;
-
+    
     /**
      * 获取主键值
      *
@@ -56,4 +59,4 @@ public class Lend extends Model<Lend> {
     protected Serializable pkVal() {
         return this.lendId;
     }
-}
+    }

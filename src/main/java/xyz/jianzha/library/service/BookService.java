@@ -7,7 +7,7 @@ import xyz.jianzha.library.entity.Book;
  * 图书书目表(Book)表服务接口
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 21:17
  */
 public interface BookService extends IService<Book> {
 

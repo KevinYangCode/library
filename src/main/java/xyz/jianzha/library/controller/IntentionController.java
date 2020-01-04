@@ -16,9 +16,9 @@ import java.util.List;
  * 新书采购意向表(Intention)表控制层
  *
  * @author Y_Kevin
- * @date 2020-01-03 19:18
+ * @date 2020-01-03 20:03
  */
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 @RestController
 @RequestMapping("intention")
 public class IntentionController extends ApiController {
