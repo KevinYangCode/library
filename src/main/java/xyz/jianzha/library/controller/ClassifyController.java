@@ -3,10 +3,10 @@ package xyz.jianzha.library.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Classify;
 import xyz.jianzha.library.service.ClassifyService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -29,15 +29,14 @@ public class ClassifyController extends ApiController {
     private ClassifyService classifyService;
 
     /**
-     * 分页查询所有数据
+     * 查询所有数据
      *
-     * @param page 分页对象
      * @param classify 查询实体
      * @return 所有数据
      */
     @GetMapping
-    public R selectAll(Page<Classify> page, Classify classify) {
-        return success(this.classifyService.page(page, new QueryWrapper<>(classify)));
+    public ResponseData selectAll(Classify classify) {
+        return ResponseData.success(this.classifyService.list(new QueryWrapper<>(classify)));
     }
 
     /**

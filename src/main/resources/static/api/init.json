@@ -18,6 +18,32 @@
       "icon": "fa fa-address-book",
       "child": [
         {
+          "title": "全部图书",
+          "href": "",
+          "icon": "fa fa-home",
+          "target": "_self",
+          "child": [
+            {
+              "title": "图书列表",
+              "href": "/page/book/bookList.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
+              "title": "图书卡片",
+              "href": "/page/book/bookCard.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
+              "title": "图书测试",
+              "href": "/page/book/test.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            }
+          ]
+        },
+        {
           "title": "主页模板",
           "href": "",
           "icon": "fa fa-home",

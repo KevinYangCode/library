@@ -1,0 +1,32 @@
+.layuimini-booklist-fluid .layuimini-contact-box {
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #e7eaec;
+    overflow: hidden;
+}
+
+.layuimini-booklist-fluid .layuimini-book_img img {
+    max-width: 90%;
+    margin-top: 5px;
+}
+
+.layuimini-booklist-fluid .layuimini-padding-left20 {
+    padding-left: 20px;
+}
+
+.layuimini-booklist-fluid .layuimini-title {
+    margin: 5px 0 10px 0;
+}
+
+.layuimini-booklist-fluid .layuimini-textimg {
+    line-height: 25px;
+    margin-bottom: 10px;
+}
+
+.layuimini-booklist-fluid .layuimini-font-blod {
+    font-weight: 600;
+}
+
+.layui-fluid {
+    padding: 10px;
+}

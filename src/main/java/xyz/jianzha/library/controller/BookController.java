@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Book;
 import xyz.jianzha.library.service.BookService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -36,8 +37,14 @@ public class BookController extends ApiController {
      * @return 所有数据
      */
     @GetMapping
-    public R selectAll(Page<Book> page, Book book) {
-        return success(this.bookService.page(page, new QueryWrapper<>(book)));
+    public ResponseData selectAll(Page<Book> page, Book book) {
+        System.out.println("BookName===>：" + book.getName());
+        System.out.println("BookClassId===>：" + book.getClassId());
+        QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(book.getName() != null && !"".equals(book.getName()), "name", book.getName());
+        queryWrapper.eq(book.getClassId() != null && !"".equals(book.getClassId()), "class_id", book.getClassId());
+        Page<Book> bookPage = bookService.page(page, queryWrapper);
+        return ResponseData.success(bookPage.getRecords(), bookPage.getTotal(), "遍历图书成功！");
     }
 
     /**

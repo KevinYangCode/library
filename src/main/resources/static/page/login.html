@@ -73,6 +73,7 @@
 
         // 进行登录操作
         form.on('submit(login)', function (data) {
+            var loginLoading = top.layer.msg('登陆中，请稍候', {icon: 16, time: false, shade: 0.8});
             var btn = $(this);
             //设置登录按钮  为不可点击
             btn.text("登录中...").attr("disabled", "disabled").addClass("layui-disabled");
@@ -86,15 +87,20 @@
                 success: function (rs) {
                     // 设置登录按钮恢复可点击在前端防止 重复点击
                     btn.text("登录").attr("disabled", false).removeClass("layui-disabled");
-                    layer.msg(rs.msg);
+                    // layer.msg(rs.msg);
+                    top.layer.msg(rs.msg, {time: 10000});
                     if (rs.code === 0) {
-                        layer.msg(rs.msg, {time: 5000});
-                        location.href = "/page/main.html";
+                        window.location.href = "/page/main.html";
+                        top.layer.close(loginLoading);
                     } else {
                         // 跳转到templates/list.html页面
-                        layer.msg(rs.msg, {time: 5000});
-                        location.href = "/page/main.html";
+                        // layer.msg(rs.msg, {time: 5000});
+                        window.location.href = "/page/main.html";
+                        top.layer.close(loginLoading);
                     }
+                },
+                done: function () {
+                    layer.close(loading);
                 }
             });
             return false;
