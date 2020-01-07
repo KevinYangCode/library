@@ -14,5 +14,4 @@ import org.springframework.stereotype.Service;
  */
 @Service("classifyService")
 public class ClassifyServiceImpl extends ServiceImpl<ClassifyMapper, Classify> implements ClassifyService {
-
 }

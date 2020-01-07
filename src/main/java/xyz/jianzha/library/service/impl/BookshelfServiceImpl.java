@@ -14,5 +14,4 @@ import org.springframework.stereotype.Service;
  */
 @Service("bookshelfService")
 public class BookshelfServiceImpl extends ServiceImpl<BookshelfMapper, Bookshelf> implements BookshelfService {
-
 }

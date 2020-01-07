@@ -1,13 +1,19 @@
 package xyz.jianzha.library.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Book;
+import xyz.jianzha.library.entity.Bookshelf;
+import xyz.jianzha.library.entity.Classify;
 import xyz.jianzha.library.service.BookService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.service.BookshelfService;
+import xyz.jianzha.library.service.ClassifyService;
 import xyz.jianzha.library.utils.ResponseData;
+import xyz.jianzha.library.vo.BookVo;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -28,23 +34,37 @@ public class BookController extends ApiController {
      */
     @Resource
     private BookService bookService;
+    @Resource
+    private ClassifyService classifyService;
+    @Resource
+    private BookshelfService bookshelfService;
 
     /**
-     * 分页查询所有数据
+     * 查询所有数据
      *
-     * @param page 分页对象
-     * @param book 查询实体
+     * @param bookVo 查询实体
      * @return 所有数据
      */
     @GetMapping
-    public ResponseData selectAll(Page<Book> page, Book book) {
-        System.out.println("BookName===>：" + book.getName());
-        System.out.println("BookClassId===>：" + book.getClassId());
+    public ResponseData selectPage(BookVo bookVo) {
         QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(book.getName() != null && !"".equals(book.getName()), "name", book.getName());
-        queryWrapper.eq(book.getClassId() != null && !"".equals(book.getClassId()), "class_id", book.getClassId());
-        Page<Book> bookPage = bookService.page(page, queryWrapper);
-        return ResponseData.success(bookPage.getRecords(), bookPage.getTotal(), "遍历图书成功！");
+        queryWrapper.like(bookVo.getName() != null && !"".equals(bookVo.getName()), "name", bookVo.getName());
+        queryWrapper.eq(bookVo.getClassId() != null && !"".equals(bookVo.getClassId()), "class_id", bookVo.getClassId());
+        // 判断是否参数是否带有分页条件
+        if (bookVo.getCurrent() == null || "".equals(bookVo.getCurrent()) || bookVo.getSize() == null || "".equals(bookVo.getSize())) {
+            // 不分页查询
+            List<Book> list = bookService.list(queryWrapper);
+            // 调用方法（根据ID查找对应的名称）
+            bookService.idToName(list);
+            return ResponseData.success(list, list.size(), "遍历图书成功！");
+        } else {
+            // 分页查询
+            IPage<Book> bookPage = new Page<>(bookVo.getCurrent(), bookVo.getSize());
+            bookPage = bookService.page(bookPage, queryWrapper);
+            // 调用方法（根据ID查找对应的名称）
+            bookService.idToName(bookPage.getRecords());
+            return ResponseData.success(bookPage.getRecords(), bookPage.getTotal(), "遍历图书成功！");
+        }
     }
 
     /**
@@ -54,8 +74,8 @@ public class BookController extends ApiController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.bookService.getById(id));
+    public ResponseData selectOne(@PathVariable Serializable id) {
+        return ResponseData.success(this.bookService.getById(id), "执行成功！");
     }
 
     /**
@@ -65,8 +85,9 @@ public class BookController extends ApiController {
      * @return 新增结果
      */
     @PostMapping
-    public R insert(@RequestBody Book book) {
-        return success(this.bookService.save(book));
+    public ResponseData insert(Book book) {
+        System.out.println(book.toString());
+        return ResponseData.success(this.bookService.save(book), "添加成功！");
     }
 
     /**
@@ -76,8 +97,9 @@ public class BookController extends ApiController {
      * @return 修改结果
      */
     @PutMapping
-    public R update(@RequestBody Book book) {
-        return success(this.bookService.updateById(book));
+    public ResponseData update(Book book) {
+        System.err.println(book);
+        return ResponseData.success(this.bookService.updateById(book), "修改成功！");
     }
 
     /**
@@ -87,7 +109,7 @@ public class BookController extends ApiController {
      * @return 删除结果
      */
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.bookService.removeByIds(idList));
+    public ResponseData delete(@RequestParam("idList") List<Long> idList) {
+        return ResponseData.success(this.bookService.removeByIds(idList), "执行成功！");
     }
 }

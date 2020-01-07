@@ -29,15 +29,14 @@ public class BookshelfController extends ApiController {
     private BookshelfService bookshelfService;
 
     /**
-     * 分页查询所有数据
+     * 查询所有数据
      *
-     * @param page 分页对象
      * @param bookshelf 查询实体
      * @return 所有数据
      */
     @GetMapping
-    public R selectAll(Page<Bookshelf> page, Bookshelf bookshelf) {
-        return success(this.bookshelfService.page(page, new QueryWrapper<>(bookshelf)));
+    public R selectAll(Bookshelf bookshelf) {
+        return success(this.bookshelfService.list(new QueryWrapper<>(bookshelf)));
     }
 
     /**

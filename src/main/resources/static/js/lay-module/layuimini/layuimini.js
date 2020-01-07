@@ -670,7 +670,6 @@ layui.define(["element", "jquery"], function (exports) {
             }).resize();
         };
 
-
     };
 
     /**

@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>layui</title>
+    <title>图书卡片（模拟渲染）</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -13,7 +13,6 @@
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
-
         <fieldset class="layui-elem-field layuimini-search">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
@@ -40,7 +39,6 @@
                 </form>
             </div>
         </fieldset>
-
         <div class="layui-fluid layuimini-booklist-fluid">
             <div id="bookView" class="layui-row layui-col-space15"></div>
         </div>
@@ -86,32 +84,71 @@
     {{# } }}
 </script>
 <script>
-    var datas;
-    layui.use(['form', 'laypage', 'laytpl', 'jquery'], function () {
+    layui.use(['form', 'laypage', 'jquery'], function () {
         var form = layui.form,
-            laypage = layui.laypage,
-            laytpl = layui.laytpl;
+            laypage = layui.laypage;
         $ = layui.jquery;
-        var counts = 100;
-
-        laypage.render({
-            elem: 'bookCardPage'
-            , jump: function (obj) {
-                //obj包含了当前分页的所有参数，比如：
-                var data = bookcard(obj);
-                counts = data.count;
-                var getTpl = bookList.innerHTML;
-                var view = document.getElementById('bookView');
-                laytpl(getTpl).render(data, function (html) {
-                    view.innerHTML = html;
-                });
-            }
-            , count: counts // TODO 条数通过上面获取不了，待解决
-            , limit: 12
-            , groups: 3
-            , first: false
-            , last: false
+        var datas = bookcardAll();
+        initPage();
+        //模糊查询
+        form.on("submit(doSerach)", function (data) {
+            var conditions = data.field;
+            console.log(conditions);
+            datas = bookcardAll(conditions);
+            initPage();
+            return false;
         });
+
+        function initPage() {
+            laypage.render({
+                elem: 'bookCardPage'
+                , count: datas.length
+                , limit: 6
+                , groups: 3
+                , first: false
+                , last: false
+                , jump: function (obj) {
+                    //模拟渲染
+                    document.getElementById('bookView').innerHTML = function () {
+                        var arr = []
+                            , thisData = datas.concat().splice(obj.curr * obj.limit - obj.limit, obj.limit);
+                        layui.each(thisData, function (index, item) {
+                            arr.push('<div class="layui-col-md4 layui-col-sm6 layui-col-lg3">');
+                            arr.push('<div class="layuimini-contact-box">');
+                            arr.push('<div class="layui-col-md6 layui-col-sm6 layui-col-xs6">');
+                            arr.push('<a href="javascript:;">');
+                            arr.push('<div class="layuimini-book_img">');
+                            arr.push("<img src='" + item.pic + "'>");
+                            arr.push('</div>');
+                            arr.push('</a>');
+                            arr.push('</div>');
+                            arr.push('<div class="layui-col-md6 layui-col-sm6 layui-col-xs6 layuimini-padding-left20">');
+                            arr.push('<a href="javascript:;">');
+                            arr.push('<h3 class="layuimini-title">');
+                            arr.push('<strong>' + item.name + '</strong>');
+                            arr.push('</h3>');
+                            arr.push('<p class="layuimini-textimg">');
+                            arr.push('<i class="layui-icon layui-icon-location"></i>');
+                            arr.push(' ' + item.locationName);
+                            arr.push('</p>');
+                            arr.push('<p class="layuimini-textimg">');
+                            arr.push('<i class="layui-icon layui-icon-note layuimini-font-blod"></i>');
+                            arr.push(' ' + item.className);
+                            arr.push('</p>');
+                            arr.push('</a>');
+                            arr.push('<div class="layui-btn-group">');
+                            arr.push('<button class="layui-btn data-add-btn">添加</button>');
+                            arr.push('<button class="layui-btn layui-btn-danger data-delete-btn">删除</button>');
+                            arr.push('</div></div></div></div>');
+                        });
+                        if (thisData.length === 0) {
+                            arr.push('无数据！')
+                        }
+                        return arr.join('');
+                    }();
+                }
+            });
+        }
 
         //初始化查询条件的下拉列表
         $.get("/classify", function (objs) {
@@ -123,45 +160,19 @@
             form.render("select");
         });
 
-        //模糊查询
-        form.on("submit(doSerach)", function (data) {
-            var conditions = data.field;
-            // layer.alert(JSON.stringify(data.field));
-            laypage.render({
-                elem: 'bookCardPage'
-                , jump: function (obj) {
-                    //obj包含了当前分页的所有参数，比如：
-                    var data = bookcard(obj, conditions);
-                    counts = data.count;
-                    var getTpl = bookList.innerHTML;
-                    var view = document.getElementById('bookView');
-                    laytpl(getTpl).render(data, function (html) {
-                        view.innerHTML = html;
-                    });
-                }
-                , count: counts // TODO 条数通过上面获取不了，待解决
-                , limit: 12
-                , groups: 3
-                , first: false
-                , last: false
-            });
-            return false;
-        });
-
     });
+    var datas;
 
-    function bookcard(obj, conditions) {
-        // layer.alert(conditions);
+    function bookcardAll(conditions) {
         $.ajax({
             url: "/book",
             type: "GET",
             async: false,
-            data: {"current": obj.curr, "size": obj.limit},
-            where: conditions,
+            data: conditions,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                datas = data;
+                datas = data.data;
             },
         });
         return datas;

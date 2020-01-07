@@ -40,6 +40,33 @@
               "href": "/page/book/test.html",
               "icon": "fa fa-file-text",
               "target": "_self"
+            },
+            {
+              "title": "图书测试2",
+              "href": "/page/book/test2.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "图书淘汰页面",
+          "href": "",
+          "icon": "fa fa-home",
+          "target": "_self",
+          "child": [
+
+            {
+              "title": "图书卡片",
+              "href": "/page/weedOut/bookCard2.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
+              "title": "图书卡片",
+              "href": "/page/weedOut/bookCard2.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
             }
           ]
         },
