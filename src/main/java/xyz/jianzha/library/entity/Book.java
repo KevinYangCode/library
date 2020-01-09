@@ -96,7 +96,7 @@ public class Book extends Model<Book> {
     private String locationName;
 
     /**
-     * 图书状态(0在架/1借出)
+     * 图书状态(1在架/0借出)
      */
     private Integer status;
 

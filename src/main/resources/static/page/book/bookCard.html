@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="/lib/layui-v2.5.5/css/layui.css" media="all">
     <link rel="stylesheet" href="/css/public.css" media="all">
     <link rel="stylesheet" href="/css/bookCard.css" media="all">
+    <style>
+        .layui-disabled, .layui-disabled:hover {
+            color: black !important;
+            cursor: not-allowed !important;
+        }
+    </style>
 </head>
 <body>
 <div class="layuimini-container">
@@ -45,60 +51,137 @@
         <div id="bookCardPage" style="text-align: center"></div>
     </div>
 </div>
-<script src="/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
-<script id="bookList" type="text/html">
-    {{# layui.each(d.data, function(index, item){ }}
-    <div class="layui-col-md4 layui-col-sm6 layui-col-lg3">
-        <div class="layuimini-contact-box">
-            <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
-                <a href="javascript:;">
-                    <div class="layuimini-book_img">
-                        <img src="{{ item.pic }}">
-                    </div>
-                </a>
+
+<!-- 详情页弹出层 -->
+<div id="details-tpl" style="margin: 20px; display: none;">
+    <form id="dataForm" lay-filter="form-details" class="layui-form  layui-form-pane">
+        <!-- 隐藏ID，便于操作 -->
+        <div class="layui-form-item layui-hide">
+            <input type="text" class="layui-input" name="bookId"/>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">图书名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" readonly="readonly" placeholder="请输入图书名称"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
             </div>
-            <div class="layui-col-md6 layui-col-sm6 layui-col-xs6 layuimini-padding-left20">
-                <a href="javascript:;">
-                    <h3 class="layuimini-title">
-                        <strong>{{ item.name }}</strong>
-                    </h3>
-                    <p class="layuimini-textimg">
-                        <i class="layui-icon layui-icon-location"></i>
-                        {{ item.location}}
-                    </p>
-                    <p class="layuimini-textimg">
-                        <i class="layui-icon layui-icon-note layuimini-font-blod"></i>
-                        {{ item.classId}}
-                    </p>
-                </a>
-                <div class="layui-btn-group">
-                    <button class="layui-btn data-add-btn">添加</button>
-                    <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
+            <div class="layui-inline">
+                <label class="layui-form-label">作者</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="author" readonly="readonly" placeholder="请输入作者" autocomplete="off"
+                           class="layui-input">
                 </div>
             </div>
         </div>
-    </div>
-    {{# }); }}
-    {{# if(d.data.length === 0){ }}
-    无数据
-    {{# } }}
-</script>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出版社</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="publish" readonly="readonly" placeholder="请输入出版社" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">标准书号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="isbn" readonly="readonly" placeholder="请输入标准书号" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">价格</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="price" readonly="readonly" placeholder="请输入价格"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">出版时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="pubDate" id="pubDate" readonly="readonly" placeholder="yyyy-MM-dd"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">分类</label>
+                <div class="layui-input-inline">
+                    <select name="classId" disabled id="edit_classid" lay-search=""></select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">位置</label>
+                <div class="layui-input-inline">
+                    <select name="location" disabled id="edit_location" lay-search=""></select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">图书状态</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" checked="" disabled name="status" lay-skin="switch" lay-text="在架|已借出">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">拥有者</label>
+                <div class="layui-input-inline">
+                    <select name="owner" disabled id="edit_ownerid" lay-search=""></select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">简介--(拥有者只需换的表接口，userInfo已经包含UuId和name了；图片没做,暂时都为/images/spring4.png)</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入简介" readonly="readonly" name="introduction" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">图片路径</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="pic" readonly="readonly" autocomplete="off"
+                           class="layui-input" value="/images/spring4.png">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <button type="button" class="layui-btn" lay-submit="" lay-filter="doBorrow" value="借阅"></button>
+        </div>
+    </form>
+</div>
+<script src="/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'laypage', 'jquery'], function () {
-        var form = layui.form,
-            laypage = layui.laypage;
+    layui.use(['form', 'laypage', 'layer', 'jquery'], function () {
+        var form = layui.form;
+        var laypage = layui.laypage;
+        var layer = layui.layer;
         $ = layui.jquery;
+        // 调用方法获取所有数据
         var datas = bookcardAll();
+        // 调用方法初始化卡片页面
         initPage();
         //模糊查询
         form.on("submit(doSerach)", function (data) {
             var conditions = data.field;
-            console.log(conditions);
+            // 调用方法根据条件查询所有数据
             datas = bookcardAll(conditions);
+            // 调用方法重载页面
             initPage();
+            //阻止表单跳转
             return false;
         });
 
+        /**
+         * 卡片式渲染图书数据
+         */
         function initPage() {
             laypage.render({
                 elem: 'bookCardPage'
@@ -115,6 +198,9 @@
                         layui.each(thisData, function (index, item) {
                             arr.push('<div class="layui-col-md4 layui-col-sm6 layui-col-lg3">');
                             arr.push('<div class="layuimini-contact-box">');
+                            arr.push('<div class="layui-hide bookID"> ');
+                            arr.push(item.bookId);
+                            arr.push('</div>');
                             arr.push('<div class="layui-col-md6 layui-col-sm6 layui-col-xs6">');
                             arr.push('<a href="javascript:;">');
                             arr.push('<div class="layuimini-book_img">');
@@ -137,8 +223,13 @@
                             arr.push('</p>');
                             arr.push('</a>');
                             arr.push('<div class="layui-btn-group">');
-                            arr.push('<button class="layui-btn data-add-btn">添加</button>');
-                            arr.push('<button class="layui-btn layui-btn-danger data-delete-btn">删除</button>');
+                            arr.push('<button onclick="detailsID(' + item.bookId + ',\'' + item.locationName + '\')" class="layui-btn data-details-btn">详情</button>');
+                            // 判断图书的状态，是否借出，呈现不同的按钮
+                            if (item.status === 1) {
+                                arr.push('<button class="layui-btn layui-btn-danger" onclick="borrowing(' + item.bookId + ',' + item.status + ',\'' + item.locationName + '\')">借阅</button>');
+                            } else {
+                                arr.push('<button class="layui-btn layui-btn-disabled" style="color: #0C0C0C">借阅</button>');
+                            }
                             arr.push('</div></div></div></div>');
                         });
                         if (thisData.length === 0) {
@@ -150,19 +241,182 @@
             });
         }
 
-        //初始化查询条件的下拉列表
-        $.get("/classify", function (objs) {
-            var types = objs.data;
-            var search_classid = $("#search_classid");
-            $.each(types, function (index, item) {
-                search_classid.append("<option value=" + item.classId + ">" + item.className + "</option>");
+        $(".data-details-btn").on("click", function () {
+            /**
+             * 若jq能获取直接获取到bookId和locationName
+             * 就不需要最后面的detailsID()方法
+             * var loacl = $(".layui-icon-location").text();
+             * var bookID = $(".bookID").text();
+             * console.log("bookID" + bookID);
+             * console.log("loacl" + loacl);
+             * 行不通
+             */
+            layer.open({
+                btn: ['借阅', '取消']
+                , title: '图书详情'
+                , area: ['700px', '520px']
+                , type: 1
+                , resize: false
+                , content: $("#details-tpl")
+                , success: function () {
+                    form.render(null, 'form-details');
+                }
+                , yes: function (index, layero) {
+                    $('form[lay-filter="form-details"]').find('button[lay-submit]').click();
+                    layer.close(index);
+                }
             });
-            form.render("select");
+            // 调用方法获取详情数据并渲染
+            setdetailsPageValue();
+            // setdetailsPageValue(bookId, locationName);
         });
 
+        // 监听弹出层中的确认事件
+        form.on("submit(doBorrow)", function (data) {
+            var bookId = JSON.parse(JSON.stringify(data.field))["bookId"];
+            var status = JSON.parse(JSON.stringify(data.field))["status"];
+            var locationName = JSON.parse(JSON.stringify(data.field))["locationName"];
+            // 调用方法进行结束操作
+            borrowing(bookId, status, locationName);
+            //阻止表单跳转
+            return false;
+        });
+
+        // 调用初始化下拉列表的数据方法
+        setFormSelect();
+
+        /**
+         * 初始化下拉列表的数据
+         */
+        function setFormSelect() {
+            $.get("/classify", function (objs) {
+                var edit_classid = $("#edit_classid");
+                var search_classid = $("#search_classid");
+                $.each(objs.data, function (index, item) {
+                    edit_classid.append("<option value=" + item.classId + ">" + item.className + "</option>");
+                    search_classid.append("<option value=" + item.classId + ">" + item.className + "</option>");
+                });
+                //刷新select选择框渲染
+                form.render("select");
+            });
+            $.get("/bookshelf", function (objs) {
+                var edit_location = $("#edit_location");
+                $.each(objs.data, function (index, item) {
+                    edit_location.append("<option value=" + item.bsId + ">" + item.name + "</option>");
+                });
+                //刷新select选择框渲染
+                form.render("select");
+            });
+            $.get("/user", function (objs) {
+                var edit_ownerid = $("#edit_ownerid");
+                $.each(objs.data, function (index, item) {
+                    edit_ownerid.append("<option value=" + item.useruuid + ">" + item.stuid + "</option>");
+                });
+                //刷新select选择框渲染
+                form.render("select");
+            });
+        }
+
+        /**
+         * 动态给详情页面赋值
+         * @param bookId  书的ID
+         * @param locationName 书的位置
+         */
+        // function setdetailsPageValue(bookId, locationName) {
+        function setdetailsPageValue() {
+            $.ajax({
+                url: "/book/" + bookId,
+                type: "GET",
+                success: function (datas) {
+                    var data = datas.data;
+                    // 开关只有存在值都默认为开，这里转换一下，把它关了
+                    if (data.status !== 1) {
+                        data.status = "";
+                    }
+                    form.val("form-details", {
+                        "bookId": data.bookId
+                        , "name": data.name
+                        , "author": data.author
+                        , "publish": data.publish
+                        , "isbn": data.isbn
+                        , "price": data.price
+                        , "pubDate": data.pubDate
+                        , "classId": data.classId
+                        , "location": data.location
+                        , "locationName": locationName
+                        , "status": data.status
+                        , "owner": data.owner
+                        , "introduction": data.introduction
+                        , "pic": data.pic
+                    });
+                    // 刷新表单
+                    form.render(null, 'form-details')
+                },
+                error: function () {
+                    layer.msg("查找失败", {icon: 5});
+                },
+            });
+        }
     });
+
+    /**
+     * 借阅操作
+     * @param bookId 书的ID
+     * @param status 书当前状态
+     * @param locationName 书的位置
+     */
+    function borrowing(bookId, status, locationName) {
+        layui.use(['layer', 'jquery'], function () {
+            var layer = layui.layer;
+            $ = layui.jquery;
+            // 通过开关的值判断书籍可不可以借
+            if (status === 1 || status === "on") {
+                layer.confirm('书籍放在书架' + locationName, {icon: 3, title: '确认借书？'}, function (index) {
+                    // 执行借操作
+                    $.ajax({
+                        url: "/book"
+                        , type: "PUT"
+                        , data: JSON.stringify({bookId: bookId, status: 0})
+                        , dataType: "json"
+                        , contentType: "application/json; charset=utf-8"
+                        , success: function (data) {
+                            layer.msg(data.msg, {icon: 6});
+                            layer.close(index);
+                            // 刷新外层页面
+                            location.reload();
+                        }
+                    });
+                    // 添加到借阅记录表
+                    // TODO
+                });
+            } else {
+                layer.alert("该书已被借！", {incon: 5});
+            }
+        });
+    }
+
+    // 声明全局变量来接收<点击详情>事件所传来的id，用于查找详情弹窗的数据
+    var bookId;
+    var locationName;
+
+    /**
+     *  用于点击详情时，查找详情表单里的数据的依据
+     * @param bookID 获取所选的书ID
+     * @param locationNAME 书的位置
+     */
+    function detailsID(bookID, locationNAME) {
+        bookId = bookID;
+        locationName = locationNAME;
+    }
+
+    // 声明一个值来接收页面所有图书的数据
     var datas;
 
+    /**
+     * 用于查找所有图书的信息
+     * @param conditions 查询条件
+     * @returns {*} 所有图书的数据
+     */
     function bookcardAll(conditions) {
         $.ajax({
             url: "/book",

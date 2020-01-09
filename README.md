@@ -35,11 +35,11 @@
 | introduction | text     | 0    | 0      | 是   | 简介                  |      |
 | price        | decimal  | 10   | 2      | 是   | 价格                  |      |
 | pub_date     | date     | 0    | 0      | 是   | 出版时间              |      |
-| class_id     | int      | 11   | 0      | 是   | 分类号                |      |
+| class_id     | int      | 11   | 0      | 否   | 分类号                |      |
 | pic          | longtext | 0    | 0      | 是   | 封面图片              |      |
-| location     | int      | 11   | 0      | 是   | 位置                  |      |
+| location     | int      | 11   | 0      | 否   | 位置                  |      |
 | status       | int      | 2    | 0      | 否   | 图书状态(0在架/1借出) |      |
-| owner        | varchar  | 32   | 0      | 是   | 拥有者(0/1)           |      |
+| owner        | varchar  | 32   | 0      | 否   | 拥有者(0/1)           |      |
 
 ### 2、用户登录表t_user
 
@@ -87,6 +87,12 @@
 ？？扫码录入书籍（小程序调用微信中的扫一扫功能）
 
 ？？处理t_book表的拥有者：工作室/未知/成员
+
+## 已知bug：
+   1. 列表删除，第二页删除当页全部数据时，会直接显示无数据，无法跳到第一页去。
+   2. 卡片式显示那块，点击详情后进行借阅，强行写的逻辑，因为有些数据不会获取。
+   3. tab与tab之间点击，没有刷新数据。
+
 
 [前端引用大佬的开源项目](https://github.com/zhongshaofa/layuimini)
 

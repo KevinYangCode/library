@@ -49,15 +49,10 @@ public class IdToNameCacheAspect {
         Integer classId = (Integer) args[0];
         // 从缓存里面取出对象
         Object obj = cache.get(CLASSIFY_CACHE_PREFIX + classId);
-        System.out.println("==================");
         if (obj != null) {
             // 说明缓存里面有数据
-            System.out.println("缓存里面有数据");
-            System.out.println("==================");
             return obj;
         } else {
-            System.err.println("缓存里面没有数据，执行查询");
-            System.out.println("==================");
             // 说明缓存里面没有   放行目标方法   查询数据库
             Classify res = (Classify) point.proceed();
             // 放入缓存
@@ -74,15 +69,10 @@ public class IdToNameCacheAspect {
         Integer bookshelfId = (Integer) args[0];
         // 从缓存里面取出对象
         Object obj = cache.get(BOOKSHELF_CACHE_PREFIX + bookshelfId);
-        System.out.println("==================");
         if (obj != null) {
             // 说明缓存里面有数据
-            System.out.println("缓存里面有数据");
-            System.out.println("==================");
             return obj;
         } else {
-            System.err.println("缓存里面没有数据，执行查询");
-            System.out.println("==================");
             // 说明缓存里面没有   放行目标方法   查询数据库
             Bookshelf res = (Bookshelf) point.proceed();
             // 放入缓存

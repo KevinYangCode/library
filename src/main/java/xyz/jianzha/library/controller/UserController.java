@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.User;
 import xyz.jianzha.library.service.UserService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -30,15 +31,14 @@ public class UserController extends ApiController {
     private UserService userService;
 
     /**
-     * 分页查询所有数据
+     * 查询所有数据
      *
-     * @param page 分页对象
      * @param user 查询实体
      * @return 所有数据
      */
     @GetMapping
-    public R selectAll(Page<User> page, User user) {
-        return success(this.userService.page(page, new QueryWrapper<>(user)));
+    public ResponseData selectAll(User user) {
+        return ResponseData.success(this.userService.list(new QueryWrapper<>(user)));
     }
 
     /**
@@ -48,8 +48,8 @@ public class UserController extends ApiController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.userService.getById(id));
+    public ResponseData selectOne(@PathVariable Serializable id) {
+        return ResponseData.success(this.userService.getById(id));
     }
 
     /**
@@ -59,8 +59,8 @@ public class UserController extends ApiController {
      * @return 新增结果
      */
     @PostMapping
-    public R insert(@RequestBody User user) {
-        return success(this.userService.save(user));
+    public ResponseData insert(@RequestBody User user) {
+        return ResponseData.success(this.userService.save(user));
     }
 
     /**
@@ -70,8 +70,8 @@ public class UserController extends ApiController {
      * @return 修改结果
      */
     @PutMapping
-    public R update(@RequestBody User user) {
-        return success(this.userService.updateById(user));
+    public ResponseData update(@RequestBody User user) {
+        return ResponseData.success(this.userService.updateById(user));
     }
 
     /**
@@ -81,8 +81,8 @@ public class UserController extends ApiController {
      * @return 删除结果
      */
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.userService.removeByIds(idList));
+    public ResponseData delete(@RequestParam("idList") List<Long> idList) {
+        return ResponseData.success(this.userService.removeByIds(idList));
     }
 
     @PostMapping("/login")
@@ -93,7 +93,7 @@ public class UserController extends ApiController {
         user = this.userService.getOne(queryWrapper);
         if (!Objects.isNull(user)) {
             return success(user);
-        }else {
+        } else {
             return failed("请输入正确的账号和密码");
         }
     }

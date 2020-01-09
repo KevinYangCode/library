@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Bookshelf;
 import xyz.jianzha.library.service.BookshelfService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -35,8 +36,8 @@ public class BookshelfController extends ApiController {
      * @return 所有数据
      */
     @GetMapping
-    public R selectAll(Bookshelf bookshelf) {
-        return success(this.bookshelfService.list(new QueryWrapper<>(bookshelf)));
+    public ResponseData selectAll(Bookshelf bookshelf) {
+        return ResponseData.success(this.bookshelfService.list(new QueryWrapper<>(bookshelf)));
     }
 
     /**
@@ -46,8 +47,8 @@ public class BookshelfController extends ApiController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.bookshelfService.getById(id));
+    public ResponseData selectOne(@PathVariable Serializable id) {
+        return ResponseData.success(this.bookshelfService.getById(id));
     }
 
     /**
@@ -57,8 +58,8 @@ public class BookshelfController extends ApiController {
      * @return 新增结果
      */
     @PostMapping
-    public R insert(@RequestBody Bookshelf bookshelf) {
-        return success(this.bookshelfService.save(bookshelf));
+    public ResponseData insert(@RequestBody Bookshelf bookshelf) {
+        return ResponseData.success(this.bookshelfService.save(bookshelf));
     }
 
     /**
@@ -68,8 +69,8 @@ public class BookshelfController extends ApiController {
      * @return 修改结果
      */
     @PutMapping
-    public R update(@RequestBody Bookshelf bookshelf) {
-        return success(this.bookshelfService.updateById(bookshelf));
+    public ResponseData update(@RequestBody Bookshelf bookshelf) {
+        return ResponseData.success(this.bookshelfService.updateById(bookshelf));
     }
 
     /**
@@ -79,7 +80,7 @@ public class BookshelfController extends ApiController {
      * @return 删除结果
      */
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.bookshelfService.removeByIds(idList));
+    public ResponseData delete(@RequestParam("idList") List<Long> idList) {
+        return ResponseData.success(this.bookshelfService.removeByIds(idList));
     }
 }
