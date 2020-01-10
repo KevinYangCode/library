@@ -2,7 +2,6 @@ package xyz.jianzha.library.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Intention;
 import xyz.jianzha.library.service.IntentionService;
@@ -32,13 +31,18 @@ public class IntentionController extends ApiController {
     /**
      * 分页查询所有数据
      *
-     * @param page 分页对象
+     * @param page      分页对象
      * @param intention 查询实体
      * @return 所有数据
      */
     @GetMapping
     public ResponseData selectAll(Page<Intention> page, Intention intention) {
-        return ResponseData.success(this.intentionService.page(page, new QueryWrapper<>(intention)));
+        QueryWrapper<Intention> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(intention.getName() != null && !"".equals(intention.getName()), "name", intention.getName());
+        queryWrapper.eq(intention.getSubmitter() != null && !"".equals(intention.getSubmitter()), "submitter", intention.getSubmitter());
+        Page<Intention> intentionPage = this.intentionService.page(page,queryWrapper);
+        intentionService.idToName(intentionPage.getRecords());
+        return ResponseData.success(intentionPage.getRecords(), intentionPage.getTotal(), "执行成功！");
     }
 
     /**
@@ -49,7 +53,7 @@ public class IntentionController extends ApiController {
      */
     @GetMapping("{id}")
     public ResponseData selectOne(@PathVariable Serializable id) {
-        return ResponseData.success(this.intentionService.getById(id));
+        return ResponseData.success(this.intentionService.getById(id), "执行成功！");
     }
 
     /**
@@ -60,7 +64,7 @@ public class IntentionController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Intention intention) {
-        return ResponseData.success(this.intentionService.save(intention));
+        return ResponseData.success(this.intentionService.save(intention), "执行成功！");
     }
 
     /**
@@ -71,7 +75,7 @@ public class IntentionController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Intention intention) {
-        return ResponseData.success(this.intentionService.updateById(intention));
+        return ResponseData.success(this.intentionService.updateById(intention), "执行成功！");
     }
 
     /**
@@ -82,6 +86,6 @@ public class IntentionController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.intentionService.removeByIds(idList));
+        return ResponseData.success(this.intentionService.removeByIds(idList), "执行成功！");
     }
 }

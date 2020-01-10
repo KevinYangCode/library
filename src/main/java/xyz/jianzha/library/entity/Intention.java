@@ -1,6 +1,7 @@
 package xyz.jianzha.library.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
@@ -38,6 +39,11 @@ public class Intention extends Model<Intention> {
      * 提交者
      */
     private String submitter;
+    /**
+     * 提交者
+     */
+    @TableField(exist = false)
+    private String submitterName;
 
     /**
      * 标准书号
@@ -48,6 +54,11 @@ public class Intention extends Model<Intention> {
      * 图书图片
      */
     private String pic;
+
+    /**
+     * 原因
+     */
+    private String reasons;
 
     /**
      * 获取主键值

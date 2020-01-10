@@ -2,7 +2,6 @@ package xyz.jianzha.library.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
 import xyz.jianzha.library.entity.Classify;
 import xyz.jianzha.library.service.ClassifyService;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,7 @@ public class ClassifyController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(Classify classify) {
-        return ResponseData.success(this.classifyService.list(new QueryWrapper<>(classify)));
+        return ResponseData.success(this.classifyService.list(new QueryWrapper<>(classify)), "执行成功！");
     }
 
     /**
@@ -46,8 +45,8 @@ public class ClassifyController extends ApiController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.classifyService.getById(id));
+    public ResponseData selectOne(@PathVariable Serializable id) {
+        return ResponseData.success(this.classifyService.getById(id), "执行成功！");
     }
 
     /**
@@ -57,8 +56,8 @@ public class ClassifyController extends ApiController {
      * @return 新增结果
      */
     @PostMapping
-    public R insert(@RequestBody Classify classify) {
-        return success(this.classifyService.save(classify));
+    public ResponseData insert(@RequestBody Classify classify) {
+        return ResponseData.success(this.classifyService.save(classify), "执行成功！");
     }
 
     /**
@@ -68,8 +67,8 @@ public class ClassifyController extends ApiController {
      * @return 修改结果
      */
     @PutMapping
-    public R update(@RequestBody Classify classify) {
-        return success(this.classifyService.updateById(classify));
+    public ResponseData update(@RequestBody Classify classify) {
+        return ResponseData.success(this.classifyService.updateById(classify), "执行成功！");
     }
 
     /**
@@ -79,7 +78,7 @@ public class ClassifyController extends ApiController {
      * @return 删除结果
      */
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.classifyService.removeByIds(idList));
+    public ResponseData delete(@RequestParam("idList") List<Long> idList) {
+        return ResponseData.success(this.classifyService.removeByIds(idList), "执行成功！");
     }
 }

@@ -2,8 +2,6 @@ package xyz.jianzha.library.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Bookshelf;
 import xyz.jianzha.library.service.BookshelfService;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +35,7 @@ public class BookshelfController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(Bookshelf bookshelf) {
-        return ResponseData.success(this.bookshelfService.list(new QueryWrapper<>(bookshelf)));
+        return ResponseData.success(this.bookshelfService.list(new QueryWrapper<>(bookshelf)), "执行成功！");
     }
 
     /**
@@ -48,7 +46,7 @@ public class BookshelfController extends ApiController {
      */
     @GetMapping("{id}")
     public ResponseData selectOne(@PathVariable Serializable id) {
-        return ResponseData.success(this.bookshelfService.getById(id));
+        return ResponseData.success(this.bookshelfService.getById(id), "执行成功！");
     }
 
     /**
@@ -59,7 +57,7 @@ public class BookshelfController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Bookshelf bookshelf) {
-        return ResponseData.success(this.bookshelfService.save(bookshelf));
+        return ResponseData.success(this.bookshelfService.save(bookshelf), "执行成功！");
     }
 
     /**
@@ -70,7 +68,7 @@ public class BookshelfController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Bookshelf bookshelf) {
-        return ResponseData.success(this.bookshelfService.updateById(bookshelf));
+        return ResponseData.success(this.bookshelfService.updateById(bookshelf), "执行成功！");
     }
 
     /**
@@ -81,6 +79,6 @@ public class BookshelfController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.bookshelfService.removeByIds(idList));
+        return ResponseData.success(this.bookshelfService.removeByIds(idList), "执行成功！");
     }
 }

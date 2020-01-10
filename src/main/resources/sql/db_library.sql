@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 03/01/2020 16:04:50
+ Date: 10/01/2020 14:01:57
 */
 
 SET NAMES utf8mb4;
@@ -30,30 +30,25 @@ CREATE TABLE `t_book`  (
   `introduction` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '简介',
   `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '价格',
   `pub_date` date NULL DEFAULT NULL COMMENT '出版时间',
-  `class_id` int(11) NULL DEFAULT NULL COMMENT '分类号',
+  `class_id` int(11) NOT NULL COMMENT '分类号',
   `pic` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '封面图片',
-  `location` int(11) NULL DEFAULT NULL COMMENT '位置',
-  `status` int(2) NOT NULL COMMENT '图书状态(0在架/1借出)',
-  `owner` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '拥有者(0/1)',
+  `location` int(11) NOT NULL COMMENT '位置',
+  `status` int(2) NOT NULL COMMENT '图书状态(on在架/null借出)',
+  `owner` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '拥有者(0/1)',
   PRIMARY KEY (`book_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '图书书目表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '图书书目表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_book
 -- ----------------------------
-INSERT INTO `t_book` VALUES (1, 'Spring实战4', 'Craig Walls', '第四版', '9787115417305', 'spring底层', 89.00, '2017-05-01', 1, NULL, 1, 1, NULL);
-INSERT INTO `t_book` VALUES (2, '书2', '作者2', '第一版', '9787115417305', '测试2', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (3, '书3', '作者3', '第一版', '9787115417305', '测试3', 100.00, '2016-05-20', 3, NULL, 3, 0, NULL);
-INSERT INTO `t_book` VALUES (4, '书4', '作者4', '第一版', '9787115417305', '测试4', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (5, '书5', '作者5', '第一版', '9787115417305', '测试5', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (6, '书6', '作者6', '第一版', '9787115417305', '测试6', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (7, '书7', '作者7', '第一版', '9787115417305', '测试7', 100.00, '2016-05-20', 3, NULL, 3, 0, NULL);
-INSERT INTO `t_book` VALUES (8, '书8', '作者8', '第一版', '9787115417305', '测试8', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (9, '书9', '作者9', '第一版', '9787115417305', '测试9', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (10, '书10', '作者10', '第一版', '9787115417305', '测试10', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (11, '书11', '作者11', '第一版', '9787115417305', '测试11', 100.00, '2016-05-20', 3, NULL, 3, 0, NULL);
-INSERT INTO `t_book` VALUES (12, '书12', '作者12', '第一版', '9787115417305', '测试12', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
-INSERT INTO `t_book` VALUES (13, '书13', '作者13', '第一版', '9787115417305', '测试13', 100.00, '2016-05-20', 2, NULL, 2, 0, NULL);
+INSERT INTO `t_book` VALUES (2, '书21', '作者2', '第一版', '9787115417305', '测试2', 100.00, '2016-05-06', 2, '/images/spring4.png', 2, 1, '4c1514d0f5b3441fb44531f60ca9a99a');
+INSERT INTO `t_book` VALUES (3, '书3', '作者3', '第一版', '9787115417305', '测试3', 100.00, '2016-05-10', 3, '/images/spring4.png', 3, 1, '4c1514d0f5b3441fb44531f60ca9a99a');
+INSERT INTO `t_book` VALUES (5, '书5', '作者5', '第一版', '9787115417305', '测试5', 100.00, '2016-05-18', 2, '/images/spring4.png', 2, 0, '5773991f4af74d84b0aa03db50ba4b4d');
+INSERT INTO `t_book` VALUES (24, '1', '1', '1', '1', '11', 1.00, '2020-01-21', 2, '/images/spring4.png', 1, 0, '5773991f4af74d84b0aa03db50ba4b4d');
+INSERT INTO `t_book` VALUES (25, '书1', 'ss', '1', 'a', '', 1.00, '2020-01-09', 7, '/images/spring4.png', 2, 0, '8027505d11044c86a4a471e9c8c2e410');
+INSERT INTO `t_book` VALUES (26, 'aa', 'aa', 'aa', 'aaa', '', 11.00, '2020-01-01', 3, '/images/spring4.png', 2, 1, '0a55f84521df4ce99a1ac9b6218c7d15');
+INSERT INTO `t_book` VALUES (29, '11', '1', '11', '1', '', 11.00, '2020-01-14', 2, '/images/spring4.png', 2, 1, '57c98c8043304fab98314989c60a6f03');
+INSERT INTO `t_book` VALUES (36, '啊啊', '11', '1', '11', '', 1.00, '2020-01-07', 5, '/images/spring4.png', 2, 1, '19ef853e4b3e4ae49de26a343f87849e');
 
 -- ----------------------------
 -- Table structure for t_bookshelf
@@ -63,7 +58,7 @@ CREATE TABLE `t_bookshelf`  (
   `bs_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '书架ID',
   `name` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '书架名称',
   PRIMARY KEY (`bs_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '书架表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '书架表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_bookshelf
@@ -89,7 +84,7 @@ CREATE TABLE `t_classify`  (
   `class_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '图书类别号',
   `class_name` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图书类别名',
   PRIMARY KEY (`class_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '图书分类表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '图书分类表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_classify
@@ -100,8 +95,9 @@ INSERT INTO `t_classify` VALUES (3, 'JAVAEE');
 INSERT INTO `t_classify` VALUES (4, '网络');
 INSERT INTO `t_classify` VALUES (5, '软件工程');
 INSERT INTO `t_classify` VALUES (6, '软考');
-INSERT INTO `t_classify` VALUES (7, '算法');
-INSERT INTO `t_classify` VALUES (8, '其他');
+INSERT INTO `t_classify` VALUES (10, '算法');
+INSERT INTO `t_classify` VALUES (11, '其它');
+INSERT INTO `t_classify` VALUES (15, 'aa');
 
 -- ----------------------------
 -- Table structure for t_intention
@@ -113,15 +109,16 @@ CREATE TABLE `t_intention`  (
   `submitter` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '提交者',
   `isbn` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标准书号',
   `pic` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '图书图片',
+  `reasons` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '原因',
   PRIMARY KEY (`inte_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '新书采购意向表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_intention
 -- ----------------------------
-INSERT INTO `t_intention` VALUES (1, 'SpringBoot1', '4c1514d0f5b3441fb44531f60ca9a99a', '31922121', NULL);
-INSERT INTO `t_intention` VALUES (2, 'SpringBoot2', '4c1514d0f5b3441fb44531f60ca9a99a', '31922121', NULL);
-INSERT INTO `t_intention` VALUES (3, 'SpringBoot3', '4c1514d0f5b3441fb44531f60ca9a99a', '31922121', NULL);
+INSERT INTO `t_intention` VALUES (1, 'SpringBoot1', '4c1514d0f5b3441fb44531f60ca9a99a', '31922121', NULL, NULL);
+INSERT INTO `t_intention` VALUES (2, 'SpringBoot2', '4c1514d0f5b3441fb44531f60ca9a99a', '31922121', NULL, NULL);
+INSERT INTO `t_intention` VALUES (3, 'SpringBoot3', '4c1514d0f5b3441fb44531f60ca9a99a', '31922121', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_lend
@@ -142,6 +139,20 @@ CREATE TABLE `t_lend`  (
 INSERT INTO `t_lend` VALUES (1, 1, '4c1514d0f5b3441fb44531f60ca9a99a', '2020-01-03', NULL);
 INSERT INTO `t_lend` VALUES (2, 1, '4c1514d0f5b3441fb44531f60ca9a99a', '2020-01-03', NULL);
 INSERT INTO `t_lend` VALUES (3, 1, '4c1514d0f5b3441fb44531f60ca9a99a', '2020-01-03', NULL);
+
+-- ----------------------------
+-- Table structure for t_menus
+-- ----------------------------
+DROP TABLE IF EXISTS `t_menus`;
+CREATE TABLE `t_menus`  (
+  `menus_id` int(5) NOT NULL AUTO_INCREMENT,
+  `title` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单标题',
+  `href` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转路径',
+  `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标',
+  `target` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '转发方式(_blank/_self)',
+  `parentId` int(11) NULL DEFAULT NULL COMMENT '父节点',
+  PRIMARY KEY (`menus_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_user

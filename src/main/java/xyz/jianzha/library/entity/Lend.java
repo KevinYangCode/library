@@ -1,6 +1,7 @@
 package xyz.jianzha.library.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
@@ -29,27 +30,33 @@ public class Lend extends Model<Lend> {
      */
     @TableId(type = IdType.AUTO)
     private Integer lendId;
-    
+
     /**
      * 图书ID
-     */    
+     */
     private Integer bookId;
-    
+
     /**
-     * 读者ID
-     */    
+     * 借阅者ID
+     */
     private String readerId;
-    
+
+    /**
+     * 借阅者名字
+     */
+    @TableField(exist = false)
+    private String readerName;
+
     /**
      * 借出日期
-     */    
+     */
     private Date lendDate;
-    
+
     /**
      * 归还日期
-     */    
+     */
     private Date backDate;
-    
+
     /**
      * 获取主键值
      *
@@ -59,4 +66,4 @@ public class Lend extends Model<Lend> {
     protected Serializable pkVal() {
         return this.lendId;
     }
-    }
+}

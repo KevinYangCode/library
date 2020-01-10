@@ -122,6 +122,9 @@ layui.use(['form', 'table', 'layer', 'jquery', 'laydate'], function () {
                 $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
                 return false; // 禁止点击该按钮关闭
             }
+            , end: function () {
+                $("#dataForm")[0].reset();
+            }
         });
     });
 
@@ -186,17 +189,21 @@ layui.use(['form', 'table', 'layer', 'jquery', 'laydate'], function () {
     $(".data-delete-btn").on("click", function () {
         var checkStatus = table.checkStatus('currentTableId');
         var data = checkStatus.data;
-        var idList = "";
-        // 拼接id呈List
-        if (data.length > 0) {
-            for (var i = 0; i < data.length; i++) {
-                idList += data[i].bookId + ",";// id集
+        if (data.length === 0) {
+            layer.msg('请选择一行', {icon: 2});
+        } else {
+            var idList = "";
+            // 拼接id呈List
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    idList += data[i].bookId + ",";// id集
+                }
             }
+            layer.confirm('真的删除行么', function (index) {
+                // 调用方法进行删除
+                deleteById(index, idList);
+            });
         }
-        layer.confirm('真的删除行么', function (index) {
-            // 调用方法进行删除
-            deleteById(index, idList);
-        });
     });
 
     /**

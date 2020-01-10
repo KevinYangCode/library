@@ -38,7 +38,11 @@ public class LendController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(Page<Lend> page, Lend lend) {
-        return ResponseData.success(this.lendService.page(page, new QueryWrapper<>(lend)));
+        QueryWrapper<Lend> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(lend.getBookId() != null && !"".equals(lend.getBookId()), "book_id", lend.getBookId());
+        queryWrapper.eq(lend.getReaderId() != null && !"".equals(lend.getReaderId()), "reader_id", lend.getReaderId());
+        Page<Lend> lendPage = this.lendService.page(page, queryWrapper);
+        return ResponseData.success(lendPage.getRecords(), lendPage.getTotal(), "执行成功！");
     }
 
     /**
@@ -49,7 +53,7 @@ public class LendController extends ApiController {
      */
     @GetMapping("{id}")
     public ResponseData selectOne(@PathVariable Serializable id) {
-        return ResponseData.success(this.lendService.getById(id));
+        return ResponseData.success(this.lendService.getById(id), "执行成功！");
     }
 
     /**
@@ -60,7 +64,7 @@ public class LendController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Lend lend) {
-        return ResponseData.success(this.lendService.save(lend));
+        return ResponseData.success(this.lendService.save(lend), "执行成功！");
     }
 
     /**
@@ -71,7 +75,7 @@ public class LendController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Lend lend) {
-        return ResponseData.success(this.lendService.updateById(lend));
+        return ResponseData.success(this.lendService.updateById(lend), "执行成功！");
     }
 
     /**
@@ -82,6 +86,6 @@ public class LendController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.lendService.removeByIds(idList));
+        return ResponseData.success(this.lendService.removeByIds(idList), "执行成功！");
     }
 }

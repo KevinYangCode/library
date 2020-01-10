@@ -80,7 +80,7 @@ body:after {
 }
 
 .captcha {
-    width: 60%;
+    width: 66%;
     display: inline-block;
 }
 
@@ -91,7 +91,6 @@ body:after {
 }
 
 .captcha-img img {
-    height: 34px;
     border: 1px solid #e6e6e6;
     height: 36px;
     width: 100%;
