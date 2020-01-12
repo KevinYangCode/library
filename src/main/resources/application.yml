@@ -6,6 +6,7 @@ spring:
     url: jdbc:mysql://localhost:3306/db_library?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
   #处理时间
   jackson:
     date-format: yyyy-MM-dd

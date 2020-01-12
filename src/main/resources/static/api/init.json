@@ -1,15 +1,15 @@
 {
   "clearInfo": {
-    "clearUrl": "../api/clear.json"
+    "clearUrl": "/api/clear.json"
   },
   "homeInfo": {
     "title": "首页",
     "icon": "fa fa-home",
-    "href": "/page/welcome-1.html?mpi=m-p-i-0"
+    "href": "/page/book/bookCard.html"
   },
   "logoInfo": {
     "title": "LayuiMini",
-    "image": "../images/logo.png",
+    "image": "/images/logo.png",
     "href": ""
   },
   "menuInfo": {

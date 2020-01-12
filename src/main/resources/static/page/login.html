@@ -39,7 +39,7 @@
                     <input type="text" name="code" lay-verify="required|captcha" placeholder="请输入验证码"
                            autocomplete="off" class="layui-input verification captcha">
                     <div class="captcha-img">
-                        <img src="/user/getCode">
+                        <img src="/captcha">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -70,7 +70,7 @@
 
         /**重新生成验证码*/
         function reqCaptcha() {
-            var url = "/user/getCode?" + new Date();
+            var url = "/captcha?" + new Date();
             $('.captcha-img img').attr("src", url)
         }
 
@@ -87,7 +87,7 @@
             btn.text("登录中...").attr("disabled", "disabled").addClass("layui-disabled");
             console.log(JSON.stringify(data.field));
             $.ajax({
-                url: "/user/login"
+                url: "/login"
                 , type: "POST"
                 , data: data.field
                 , dataType: "json"
