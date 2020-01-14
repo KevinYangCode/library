@@ -35,6 +35,12 @@ public class Lend extends Model<Lend> {
      * 图书ID
      */
     private Integer bookId;
+    /**
+     * 图书ID
+     */
+    @TableField(exist = false)
+    private String bookName;
+
 
     /**
      * 借阅者ID

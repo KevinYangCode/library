@@ -43,25 +43,27 @@ public class AuthController {
                 /** 使用Shiro编写认证操作 */
                 // 1. 获取Subject
                 Subject subject = SecurityUtils.getSubject();
-
-                // 2. 封装用户数据
-                UsernamePasswordToken token = new UsernamePasswordToken(user.getStuid(), user.getPassword());
-
-                // 3. 执行登录操作
-                try {
-                    subject.login(token);
-                    // 登录成功！
-                    return ResponseData.success("登陆成功");
-                } catch (UnknownAccountException e) {
-                    // 登录失败：用户名不存在
-                    return ResponseData.fail("用户不存在！");
-                } catch (IncorrectCredentialsException e) {
-                    // 登录失败：密码错误
-                    return ResponseData.fail("密码不正确！");
-                } catch (AuthenticationException e) {
-                    // 登录失败：用户或密码不正确
-                    return ResponseData.fail("用户或密码不正确！");
+                // 测试当前的用户是否已经被认证，即是否已经登录
+                if (!subject.isAuthenticated()) {
+                    // 2. 封装用户数据
+                    UsernamePasswordToken token = new UsernamePasswordToken(user.getStuid(), user.getPassword());
+                    // 3. 执行登录操作
+                    try {
+                        subject.login(token);
+                        // 登录成功！
+                        return ResponseData.success("登陆成功！");
+                    } catch (UnknownAccountException e) {
+                        // 登录失败：用户名不存在
+                        return ResponseData.fail("用户不存在！");
+                    } catch (IncorrectCredentialsException e) {
+                        // 登录失败：密码错误
+                        return ResponseData.fail("密码不正确！");
+                    } catch (AuthenticationException e) {
+                        // 登录失败：用户或密码不正确
+                        return ResponseData.fail("用户或密码不正确！");
+                    }
                 }
+                return ResponseData.fail("登陆失败！");
             } else {
                 return ResponseData.fail("验证码错误");
             }
@@ -93,4 +95,19 @@ public class AuthController {
         captcha.write(outputStream);
         outputStream.close();
     }
+
+    /**
+     * 退出登录
+     *
+     * @return JSON
+     */
+    @PostMapping("/logout")
+    public ResponseData logout() {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            subject.logout();
+        }
+        return ResponseData.success("", "退出成功！");
+    }
+
 }

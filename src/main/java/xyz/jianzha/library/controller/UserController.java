@@ -79,6 +79,7 @@ public class UserController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.userService.removeByIds(idList));
+        this.userService.removeByIds(idList);
+        return ResponseData.success("删除成功！");
     }
 }

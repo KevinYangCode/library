@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import xyz.jianzha.library.entity.Classify;
 import xyz.jianzha.library.service.ClassifyService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
@@ -57,7 +58,11 @@ public class ClassifyController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Classify classify) {
-        return ResponseData.success(this.classifyService.save(classify), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.classifyService.save(classify), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -68,7 +73,11 @@ public class ClassifyController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Classify classify) {
-        return ResponseData.success(this.classifyService.updateById(classify), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.classifyService.updateById(classify), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -79,6 +88,10 @@ public class ClassifyController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.classifyService.removeByIds(idList), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.classifyService.removeByIds(idList), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 }

@@ -1,13 +1,11 @@
 package xyz.jianzha.library.config.shiro;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import xyz.jianzha.library.entity.User;
 import xyz.jianzha.library.service.UserService;
 
@@ -35,7 +33,6 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         System.out.println("执行认证逻辑");
-
         // 编写shiro判断逻辑，判断用户名和密码
         // 1. 获取在控制层封装用户数据的AuthenticationToken中的值
         UsernamePasswordToken usertoken = (UsernamePasswordToken) token;
@@ -51,7 +48,11 @@ public class ShiroRealm extends AuthorizingRealm {
         }
         // 4.判断密码
         // shiro会通过下面去判断密码是否正确
-        return new SimpleAuthenticationInfo(user, user.getPassword(), "");
+        System.out.println(usertoken.getPassword());
+        System.out.println(user.getPassword());
+        // 第一个参数需要传获取数据后的user，如果传usertoken，只有stuid和password
+        // 下面认证就无法获取到权限等数据
+        return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
     }
 
     /**
@@ -65,17 +66,16 @@ public class ShiroRealm extends AuthorizingRealm {
         System.out.println("执行授权逻辑");
         // 给资源进行授权
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-
         // 到数据库查询当前登录用户的授权字符串
         // 获取当前登录用户(这里是上面执行登录用户时所返回的用户信息)
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-
+        User user = (User) principals.getPrimaryPrincipal();
         // 添加资源的授权字符串(应与ShiroFilterFactor拦截那里的数据一致)
-        info.addStringPermission("user:add");
-
+        // info.addStringPermission("user:add");
         // 这里可以通过角色联表查询对应的权限列表
-        // info.addStringPermission(user.getRole());
+        if (user.getRole() == 1 || user.getRole() == 2) {
+            info.addRole("admin");
+        }
+        // info.addRole(new ArrayList<String>());
         // info.addStringPermissions(new ArrayList<String>());
         return info;
     }

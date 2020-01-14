@@ -2,15 +2,16 @@ package xyz.jianzha.library.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Lend;
 import xyz.jianzha.library.service.LendService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +43,7 @@ public class LendController extends ApiController {
         queryWrapper.like(lend.getBookId() != null && !"".equals(lend.getBookId()), "book_id", lend.getBookId());
         queryWrapper.eq(lend.getReaderId() != null && !"".equals(lend.getReaderId()), "reader_id", lend.getReaderId());
         Page<Lend> lendPage = this.lendService.page(page, queryWrapper);
+        lendService.idToName(lendPage.getRecords());
         return ResponseData.success(lendPage.getRecords(), lendPage.getTotal(), "执行成功！");
     }
 
@@ -64,6 +66,8 @@ public class LendController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Lend lend) {
+        lend.setReaderId(AuthUtils.authInfo().getUseruuid());
+        lend.setLendDate(new Date());
         return ResponseData.success(this.lendService.save(lend), "执行成功！");
     }
 
@@ -75,7 +79,11 @@ public class LendController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Lend lend) {
-        return ResponseData.success(this.lendService.updateById(lend), "执行成功！");
+        if (lend.getReaderId().equals(AuthUtils.authInfo().getUseruuid())) {
+            return ResponseData.success(this.lendService.updateById(lend), "执行成功！");
+        } else {
+            return ResponseData.fail("不是该借阅人");
+        }
     }
 
     /**
@@ -86,6 +94,10 @@ public class LendController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.lendService.removeByIds(idList), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.lendService.removeByIds(idList), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 }

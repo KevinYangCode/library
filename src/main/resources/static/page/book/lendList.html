@@ -45,85 +45,27 @@
             </div>
         </fieldset>
         <div class="layui-btn-group">
-            <button class="layui-btn data-add-btn">添加</button>
+            <button class="layui-btn data-add-btn">去借书</button>
             <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
         </div>
         <table class="layui-hide" id="lendTableId" lay-filter="lendTableFilter"></table>
         <script type="text/html" id="lendTableBar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">还书</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
         </script>
     </div>
-</div>
-
-<!-- 添加和编辑的弹出层页面(设置了style="display: none;" 可以令页面初始化不呈现) -->
-<div id="edit-tpl" style="margin: 20px; display: none;">
-    <form id="lendForm" lay-filter="form-edit" class="layui-form  layui-form-pane">
-        <!-- 隐藏ID，便于修改操作 -->
-        <div class="layui-form-item layui-hide">
-            <input type="text" class="layui-input" name="lendId"/>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">图书ID</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="bookId" placeholder="请输入图书ID" lay-verify="required" autocomplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">借阅者</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="readerId" placeholder="请输入借阅者" lay-verify="required" autocomplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">借出时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="lendDate" id="lendDate" readonly="readonly" placeholder="yyyy-MM-dd"
-                           autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">归还时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="backDate" id="backDate" readonly="readonly" placeholder="yyyy-MM-dd"
-                           autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item layui-hide">
-            <button type="button" class="layui-btn" lay-submit="" lay-filter="doSubmit" value="确认"></button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-        </div>
-    </form>
 </div>
 
 <script src="/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script>
     // 搞个值，用于修改表单的赋值
     var popForm;
-    layui.use(['form', 'table', 'layer', 'jquery', 'laydate'], function () {
+    layui.use(['form', 'table', 'layer', 'jquery'], function () {
         var $ = layui.jquery
             , layer = layui.layer
             , form = layui.form
-            , laydate = layui.laydate
             , table = layui.table;
         popForm = layui.form;
-
-        // 初始化，表单里的时间组件
-        laydate.render({
-            elem: '#backDate',
-            type: 'date'
-        });
-        // 初始化，表单里的时间组件
-        laydate.render({
-            elem: '#lendDate',
-            type: 'date'
-        });
 
         // 创建数据表格
         var tableIns = table.render({
@@ -136,7 +78,8 @@
                 {type: "checkbox", width: 40, fixed: "left"},
                 {field: 'lendId', width: 50, title: 'ID', align: 'center'},
                 {field: 'bookId', title: '书ID', align: 'center'},
-                {field: 'readerId', title: '读者', align: 'center'},
+                {field: 'bookName', title: '书名', align: 'center'},
+                {hide: 'readerId', title: '读者', align: 'center'},
                 {field: 'readerName', title: '读者', align: 'center'},
                 {field: 'lendDate', title: '借出日期', align: 'center'},
                 {field: 'backDate', title: '归还日期', align: 'center'},
@@ -165,119 +108,41 @@
         table.on('tool(lendTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                editFormIndex = layer.open({
-                    btn: ['提交', '重置', '取消']
-                    , title: '编辑用户'
-                    , area: ['700px', '520px']
-                    , type: 1
-                    , id: (new Date()).valueOf()
-                    , resize: false
-                    , content: $("#edit-tpl")
-                    , success: function () {
-                    }
-                    , yes: function (index, layero) {
-                        $('form[lay-filter="form-edit"]').find('button[lay-submit]').click();
-                    }
-                    , btn2: function (index, layero) {
-                        $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
-                        // 禁止点击该按钮关闭
-                        return false;
-                    }
-                    , end: function () {
-                        //关闭弹窗，清空表单数据
-                        $("#lendForm")[0].reset();
-                    }
-                });
-                //调用方法，动态向编辑表单赋值
-                setFormValue(data);
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    data = JSON.stringify(data);
-                    var lendIds = JSON.parse(data)["lendId"];
-                    // 调用方法进行删除
-                    deleteById(index, lendIds)
+                layer.confirm('请把书籍放回书架', {icon: 3, title: '确认还书？'}, function (index) {
+                    // 执行归还操作
+                    $.ajax({
+                        url: "/lend"
+                        , type: "PUT"
+                        , data: JSON.stringify({lendId: data.lendId, readerId: data.readerId, backDate: new Date()})
+                        , dataType: "json"
+                        , contentType: "application/json; charset=utf-8"
+                        , success: function (objs) {
+                            if (objs.code === 0) {
+                                // 执行修改图书状态操作
+                                $.ajax({
+                                    url: "/book"
+                                    , type: "PUT"
+                                    , data: JSON.stringify({bookId: data.bookId, status: 1})
+                                    , dataType: "json"
+                                    , contentType: "application/json; charset=utf-8"
+                                    , success: function (data) {
+                                        layer.close(index);
+                                        layer.msg(data.msg, {icon: 6, time: 1500}, function () {
+                                            // 刷新外层页面
+                                            location.reload();
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
                 });
             }
         });
-
-        // 添加页面弹出层索引
-        var addFormIndex;
-        // 修改页面弹出层索引
-        var editFormIndex;
 
         // 打开添加页面
         $(".data-add-btn").on("click", function () {
-            addFormIndex = layer.open({
-                btn: ['添加', '重置', '取消']
-                , title: '添加借阅'
-                , area: ['700px', '520px']
-                , type: 1
-                , resize: false
-                , content: $("#edit-tpl")
-                , success: function () {
-                    form.render(null, 'form-edit');
-                }
-                , yes: function (index, layero) {
-                    $('form[lay-filter="form-edit"]').find('button[lay-submit]').click();
-                }
-                , btn2: function (index, layero) {
-                    $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
-                    return false; // 禁止点击该按钮关闭
-                }
-                , end: function () {
-                    $("#lendForm")[0].reset();
-                }
-            });
-        });
-
-        // 监听弹出层中的确认事件
-        form.on("submit(doSubmit)", function (data) {
-            data = JSON.stringify(data.field);
-            var lendIds = JSON.parse(data)["lendId"];
-            // lendId不为空就执行修改操作
-            if (lendIds != null && lendIds !== "") {
-                $.ajax({
-                    url: "/lend"
-                    , type: "PUT"
-                    , data: data
-                    , dataType: "json"
-                    , contentType: "application/json; charset=utf-8"
-                    , success: function (data) {
-                        layer.msg(data.msg, {icon: 6});
-                        // 重载表格
-                        tableIns.reload();
-                        // 关闭修改弹窗
-                        layer.close(editFormIndex);
-                    }
-                });
-            } else {
-                // lendId为空就执行添加操作
-                $.ajax({
-                    url: "/lend"
-                    , type: "POST"
-                    , data: data
-                    , dataType: "json"
-                    , contentType: "application/json; charset=utf-8"
-                    , success: function (data) {
-                        layer.msg(data.msg, {icon: 6});
-                        if (data.code === 0) {
-                            layer.confirm('是否继续录入？', {
-                                btn: ['继续', '取消'] //按钮
-                            }, function (index) {
-                                $("#lendForm")[0].reset();
-                                layer.close(index);
-                            }, function () {
-                                layer.close(addFormIndex);
-                            });
-                        }
-                        // 重载表格
-                        tableIns.reload();
-                        $("#lendForm")[0].reset();
-                    }
-                });
-            }
-            //阻止表单跳转
-            return false;
+            window.location.href = '/page/book/bookCard.html';
         });
 
         // 监听多项删除操作
@@ -338,29 +203,15 @@
          * 初始化下拉列表的数据
          */
         function setFormSelect() {
-            $.get("/user", function (objs) {
+            $.get("/userInfo", function (objs) {
                 var search_readerId = $("#search_readerId");
                 $.each(objs.data, function (index, item) {
-                    search_readerId.append("<option value=" + item.useruuid + ">" + item.stuid + "</option>");
+                    search_readerId.append("<option value=" + item.useruuid + ">" + item.name + "</option>");
                 });
                 form.render("select");
             });
         }
 
-        /**
-         * 动态给修改页面赋值
-         * @param data 当前行数据
-         */
-        function setFormValue(data) {
-            popForm.val("form-edit", {
-                "lendId": data.lendId
-                , "bookId": data.bookId
-                , "readerId": data.readerId
-                , "backDate": data.backDate
-                , "lendDate": data.lendDate
-            });
-            popForm.render(null, 'form-edit')
-        }
     });
 </script>
 

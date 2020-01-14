@@ -139,7 +139,6 @@
                 // {field: 'submitter', title: '提交者', align: 'center'},
                 {field: 'submitterName', width: 80, title: '提交者', align: 'center'},
                 {field: 'reasons', title: '简介', minWidth: 150, align: 'center'},
-                {type: 'radio', width: 80, title: '审阅', align: 'center'},
                 {title: '操作', width: 110, templet: '#intentionTableBar', fixed: "right", align: "center"}
             ]]
             , request: {
@@ -345,12 +344,12 @@
          * 初始化下拉列表的数据
          */
         function setFormSelect() {
-            $.get("/user", function (objs) {
+            $.get("/userInfo", function (objs) {
                 var edit_submitter = $("#edit_submitter");
                 var search_submitter = $("#search_submitter");
                 $.each(objs.data, function (index, item) {
-                    edit_submitter.append("<option value=" + item.useruuid + ">" + item.stuid + "</option>");
-                    search_submitter.append("<option value=" + item.useruuid + ">" + item.stuid + "</option>");
+                    edit_submitter.append("<option value=" + item.useruuid + ">" + item.name + "</option>");
+                    search_submitter.append("<option value=" + item.useruuid + ">" + item.name + "</option>");
                 });
                 form.render("select");
             });

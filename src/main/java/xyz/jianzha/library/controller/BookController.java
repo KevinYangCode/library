@@ -4,14 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.lang3.StringUtils;
 import xyz.jianzha.library.entity.Book;
+import xyz.jianzha.library.entity.Lend;
 import xyz.jianzha.library.service.BookService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.service.LendService;
+import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 import xyz.jianzha.library.vo.BookVo;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +34,8 @@ public class BookController extends ApiController {
      */
     @Resource
     private BookService bookService;
+    @Resource
+    private LendService lendService;
 
     /**
      * 查询所有数据
@@ -77,7 +84,12 @@ public class BookController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Book book) {
-        return ResponseData.success(this.bookService.save(book), "执行成功！");
+        // 判断是不是管理员
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.bookService.save(book), "添加成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -88,8 +100,23 @@ public class BookController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Book book) {
-        System.err.println(book.toString());
-        return ResponseData.success(this.bookService.updateById(book), "执行成功！");
+        // 判断是借阅还是管理员修改数据
+        // 借阅时只传bookId和status
+        // 管理员修改数据会传表单数据进来
+        if (StringUtils.isNotEmpty(book.getName())) {
+            if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+                return ResponseData.success(this.bookService.updateById(book), "执行成功！");
+            } else {
+                return ResponseData.fail("没有权限！");
+            }
+        } else {
+            // 借阅操作
+            System.err.println("====================");
+            System.err.println(book.getBookId());
+            System.err.println(book.getStatus());
+            System.err.println("====================");
+            return ResponseData.success(this.bookService.updateById(book), "执行成功！");
+        }
     }
 
     /**
@@ -100,6 +127,10 @@ public class BookController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.bookService.removeByIds(idList), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.bookService.removeByIds(idList), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 }

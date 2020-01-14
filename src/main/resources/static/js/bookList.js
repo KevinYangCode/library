@@ -148,10 +148,11 @@ layui.use(['form', 'table', 'layer', 'jquery', 'laydate'], function () {
                 , dataType: "json"
                 , contentType: "application/json; charset=utf-8"
                 , success: function (data) {
-                    layer.msg(data.msg, {icon: 6});
-                    // 重载表格
-                    tableIns.reload();
-                    // 关闭修改弹窗
+                    layer.msg(data.msg, {icon: 6, time: 1000}, function () {
+                        // 重载表格
+                        tableIns.reload();
+                        // 关闭修改弹窗
+                    });
                     layer.close(editFormIndex);
                 }
             });
@@ -164,17 +165,18 @@ layui.use(['form', 'table', 'layer', 'jquery', 'laydate'], function () {
                 , dataType: "json"
                 , contentType: "application/json; charset=utf-8"
                 , success: function (data) {
-                    layer.msg(data.msg, {icon: 6});
-                    if (data.code === 0) {
-                        layer.confirm('是否继续录入？', {
-                            btn: ['继续', '取消'] //按钮
-                        }, function (index) {
-                            $("#dataForm")[0].reset();
-                            layer.close(index);
-                        }, function () {
-                            layer.close(addFormIndex);
-                        });
-                    }
+                    layer.msg(data.msg, {icon: 6, time: 1000}, function () {
+                        if (data.code === 0) {
+                            layer.confirm('是否继续录入？', {
+                                btn: ['继续', '取消'] //按钮
+                            }, function (index) {
+                                $("#dataForm")[0].reset();
+                                layer.close(index);
+                            }, function () {
+                                layer.close(addFormIndex);
+                            });
+                        }
+                    });
                     // 重载表格
                     tableIns.reload();
                     $("#dataForm")[0].reset();
@@ -259,10 +261,10 @@ layui.use(['form', 'table', 'layer', 'jquery', 'laydate'], function () {
             });
             form.render("select");
         });
-        $.get("/user", function (objs) {
+        $.get("/userInfo", function (objs) {
             var edit_ownerid = $("#edit_ownerid");
             $.each(objs.data, function (index, item) {
-                edit_ownerid.append("<option value=" + item.useruuid + ">" + item.stuid + "</option>");
+                edit_ownerid.append("<option value=" + item.useruuid + ">" + item.name + "</option>");
             });
             form.render("select");
         });

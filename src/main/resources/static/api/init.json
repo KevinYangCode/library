@@ -24,12 +24,6 @@
           "target": "_self",
           "child": [
             {
-              "title": "图书列表",
-              "href": "/page/book/bookList.html",
-              "icon": "fa fa-file-text",
-              "target": "_self"
-            },
-            {
               "title": "图书卡片",
               "href": "/page/book/bookCard.html",
               "icon": "fa fa-file-text",
@@ -42,20 +36,8 @@
               "target": "_self"
             },
             {
-              "title": "借阅信息列表",
+              "title": "全部借阅",
               "href": "/page/book/lendList.html",
-              "icon": "fa fa-file-text",
-              "target": "_self"
-            },
-            {
-              "title": "图书测试",
-              "href": "/page/book/test.html",
-              "icon": "fa fa-file-text",
-              "target": "_self"
-            },
-            {
-              "title": "图书测试2",
-              "href": "/page/book/test2.html",
               "icon": "fa fa-file-text",
               "target": "_self"
             }
@@ -67,6 +49,12 @@
           "icon": "fa fa-home",
           "target": "_self",
           "child": [
+            {
+              "title": "图书列表",
+              "href": "/page/system/bookList.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
             {
               "title": "分类管理",
               "href": "/page/system/classifyList.html",
@@ -88,6 +76,12 @@
           "target": "_self",
           "child": [
             {
+              "title": "我的借阅",
+              "href": "/page/book/lendList.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
               "title": "用户设置",
               "href": "/page/user/user-password.html",
               "icon": "fa fa-file-text",
@@ -102,18 +96,6 @@
           ]
         },
         {
-          "title": "菜单管理",
-          "href": "/page/persistence/menu.html",
-          "icon": "fa fa-window-maximize",
-          "target": "_self"
-        },
-        {
-          "title": "系统设置",
-          "href": "/page/persistence/setting.html",
-          "icon": "fa fa-gears",
-          "target": "_self"
-        },
-        {
           "title": "异常页面",
           "href": "",
           "icon": "fa fa-home",
@@ -121,7 +103,13 @@
           "child": [
             {
               "title": "404页面",
-              "href": "/page/persistence/404.html",
+              "href": "/error.html",
+              "icon": "fa fa-hourglass-end",
+              "target": "_self"
+            },
+            {
+              "title": "没有权限页面",
+              "href": "/page/noAuth.html",
               "icon": "fa fa-hourglass-end",
               "target": "_self"
             }
@@ -143,18 +131,6 @@
           "title": "文件上传",
           "href": "/page/persistence/upload.html",
           "icon": "fa fa-arrow-up",
-          "target": "_self"
-        }
-      ]
-    },
-    "other": {
-      "title": "其它管理",
-      "icon": "fa fa-slideshare",
-      "child": [
-        {
-          "title": "失效菜单",
-          "href": "/page/error.html",
-          "icon": "fa fa-superpowers",
           "target": "_self"
         }
       ]

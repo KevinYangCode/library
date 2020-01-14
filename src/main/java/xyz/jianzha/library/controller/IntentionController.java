@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.Intention;
 import xyz.jianzha.library.service.IntentionService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
@@ -40,7 +41,7 @@ public class IntentionController extends ApiController {
         QueryWrapper<Intention> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(intention.getName() != null && !"".equals(intention.getName()), "name", intention.getName());
         queryWrapper.eq(intention.getSubmitter() != null && !"".equals(intention.getSubmitter()), "submitter", intention.getSubmitter());
-        Page<Intention> intentionPage = this.intentionService.page(page,queryWrapper);
+        Page<Intention> intentionPage = this.intentionService.page(page, queryWrapper);
         intentionService.idToName(intentionPage.getRecords());
         return ResponseData.success(intentionPage.getRecords(), intentionPage.getTotal(), "执行成功！");
     }
@@ -86,6 +87,10 @@ public class IntentionController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.intentionService.removeByIds(idList), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.intentionService.removeByIds(idList), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 }

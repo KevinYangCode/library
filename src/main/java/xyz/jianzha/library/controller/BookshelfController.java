@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import xyz.jianzha.library.entity.Bookshelf;
 import xyz.jianzha.library.service.BookshelfService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
@@ -57,7 +58,11 @@ public class BookshelfController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Bookshelf bookshelf) {
-        return ResponseData.success(this.bookshelfService.save(bookshelf), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.bookshelfService.save(bookshelf), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -68,7 +73,11 @@ public class BookshelfController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Bookshelf bookshelf) {
-        return ResponseData.success(this.bookshelfService.updateById(bookshelf), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.bookshelfService.updateById(bookshelf), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -79,6 +88,10 @@ public class BookshelfController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.bookshelfService.removeByIds(idList), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.bookshelfService.removeByIds(idList), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 }

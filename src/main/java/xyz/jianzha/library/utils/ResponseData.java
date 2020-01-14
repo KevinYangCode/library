@@ -70,12 +70,12 @@ public class ResponseData implements Serializable {
     /**
      * 成功，默认true
      *
-     * @param object 存放数据
+     * @param msg 消息
      * @return json
      */
-    public static ResponseData success(Object object) {
+    public static ResponseData success(String msg) {
         ResponseData result = new ResponseData(0);
-        result.data = object;
+        result.msg = msg;
         return result;
     }
 

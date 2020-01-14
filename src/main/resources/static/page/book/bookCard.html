@@ -138,7 +138,7 @@
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">简介--(拥有者只需换的表接口，userInfo已经包含UuId和name了；图片没做,暂时都为/images/spring4.png)</label>
+            <label class="layui-form-label">简介--(图片没做,暂时都为/images/spring4.png)</label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入简介" readonly="readonly" name="introduction" class="layui-textarea"></textarea>
             </div>
@@ -307,10 +307,10 @@
                 //刷新select选择框渲染
                 form.render("select");
             });
-            $.get("/user", function (objs) {
+            $.get("/userInfo", function (objs) {
                 var edit_ownerid = $("#edit_ownerid");
                 $.each(objs.data, function (index, item) {
-                    edit_ownerid.append("<option value=" + item.useruuid + ">" + item.stuid + "</option>");
+                    edit_ownerid.append("<option value=" + item.useruuid + ">" + item.name + "</option>");
                 });
                 //刷新select选择框渲染
                 form.render("select");
@@ -380,14 +380,23 @@
                         , dataType: "json"
                         , contentType: "application/json; charset=utf-8"
                         , success: function (data) {
-                            layer.msg(data.msg, {icon: 6});
-                            layer.close(index);
-                            // 刷新外层页面
-                            location.reload();
+                            // 添加到借阅记录表
+                            $.ajax({
+                                url: "/lend"
+                                , type: "POST"
+                                , data: JSON.stringify({bookId: bookId})
+                                , dataType: "json"
+                                , contentType: "application/json; charset=utf-8"
+                                , success: function (data) {
+                                    layer.close(index);
+                                    layer.msg(data.msg, {icon: 6, time: 1500}, function () {
+                                        // 刷新外层页面
+                                        location.reload();
+                                    });
+                                }
+                            });
                         }
                     });
-                    // 添加到借阅记录表
-                    // TODO
                 });
             } else {
                 layer.alert("该书已被借！", {incon: 5});

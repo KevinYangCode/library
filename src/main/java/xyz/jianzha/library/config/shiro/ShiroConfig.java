@@ -1,6 +1,7 @@
 package xyz.jianzha.library.config.shiro;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -23,8 +24,10 @@ public class ShiroConfig {
      * 创建Realm
      */
     @Bean("ShiroRealm")
-    public ShiroRealm shiroRealm() {
-        return new ShiroRealm();
+    public ShiroRealm shiroRealm(HashedCredentialsMatcher hashedCredentialsMatcher) {
+        ShiroRealm shiroRealm = new ShiroRealm();
+        shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher);
+        return shiroRealm;
     }
 
     /**
@@ -70,10 +73,12 @@ public class ShiroConfig {
         filterMap.put("/login", "anon");
         // 登录页面>放行
         filterMap.put("/page/login.html", "anon");
+        // 登出
+        filterMap.put("/shiro/logout", "logout");
 
         // 授权过滤器
         // 注意：当前授权拦截后，shiro会自动跳转到未授权页面
-        filterMap.put("/page/welcome-1.html","perms[user:add]");
+        filterMap.put("/page/system/**", "roles[admin]");
 
         filterMap.put("/**", "authc");
 
@@ -84,6 +89,19 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
 
         return shiroFilterFactoryBean;
+    }
+
+    /**
+     * @return
+     */
+    @Bean("hashedCredentialsMatcher")
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
+        // 散列算法:这里使用MD5算法;
+        matcher.setHashAlgorithmName("MD5");
+        // 散列的次数，比如散列两次，相当于 md5(md5(""));
+        matcher.setHashIterations(1024);
+        return matcher;
     }
 
     /**
