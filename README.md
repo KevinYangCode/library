@@ -7,7 +7,9 @@
 密码：123456
 
 druid监控面板：http://localhost:8080/druid/index.html
+
 swaggerAPI：http://localhost:8080/swagger-ui.html
+
 ## 技术
 
 | 描述         | 框架                | 版本          |
