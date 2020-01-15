@@ -30,20 +30,36 @@ public class LendServiceImpl extends ServiceImpl<LendMapper, Lend> implements Le
     @Autowired
     BookMapper bookMapper;
 
+    /**
+     * Id获取人名书名
+     *
+     * @param records 借阅的所有数据
+     */
     @Override
     public void idToName(List<Lend> records) {
         for (Lend lend : records) {
             // 人名
-            QueryWrapper<UserInfo> userWrapper = new QueryWrapper<>();
-            userWrapper.eq("userUUID", lend.getReaderId());
-            UserInfo userInfo = this.userInfoMapper.selectOne(userWrapper);
-
-            QueryWrapper<Book> bookWrapper = new QueryWrapper<>();
-            bookWrapper.eq("book_id", lend.getBookId());
-            Book book = this.bookMapper.selectOne(bookWrapper);
-
+            QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("userUUID", lend.getReaderId());
+            UserInfo userInfo = this.userInfoMapper.selectOne(queryWrapper);
+            // 书名
+            Book book = this.bookMapper.selectById(lend.getBookId());
+            // 赋值
             lend.setReaderName(userInfo.getName());
             lend.setBookName(book.getName());
         }
+    }
+
+    /**
+     * 用于借阅的模糊查询，通过图书名字查出图书ID
+     *
+     * @param name 图书名字
+     * @return 图书ID集合
+     */
+    @Override
+    public List<Object> nameToId(String name) {
+        QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", name);
+        return bookMapper.selectObjs(queryWrapper);
     }
 }

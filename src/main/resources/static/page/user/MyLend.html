@@ -8,12 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/lib/layui-v2.5.5/css/layui.css" media="all">
     <link rel="stylesheet" href="/css/public.css" media="all">
-    <style>
-        /**设置下拉框的高度，否则弹窗是会超出来 */
-        .layui-form-select dl {
-            max-height: 180px;
-        }
-    </style>
 </head>
 <body>
 <div class="layuimini-container">
@@ -25,17 +19,8 @@
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">图书名称</label>
-                            <label class="layui-form-label">图书名称</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="bookName" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">借阅者</label>
-                            <div class="layui-input-inline">
-                                <select name="readerId" id="search_readerId" lay-filter="readerFilter" lay-search="">
-                                    <option value=""></option>
-                                </select>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -47,12 +32,10 @@
         </fieldset>
         <div class="layui-btn-group">
             <button class="layui-btn data-add-btn">去借书</button>
-            <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
         </div>
         <table class="layui-hide" id="lendTableId" lay-filter="lendTableFilter"></table>
         <script type="text/html" id="lendTableBar">
             <a class="layui-btn layui-btn-xs" lay-event="edit">还书</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
         </script>
     </div>
 </div>
@@ -71,7 +54,7 @@
         // 创建数据表格
         var tableIns = table.render({
             elem: '#lendTableId'
-            , url: '/lend'
+            , url: '/lend/One'
             , limits: [8, 16, 20, 25, 50, 100]
             , limit: 8
             , page: true
@@ -95,7 +78,7 @@
         //模糊查询
         form.on("submit(doSerach)", function (data) {
             tableIns.reload({
-                url: '/lend'
+                url: '/lend/One'
                 , where: data.field
                 , page: {
                     curr: 1
@@ -145,73 +128,6 @@
         $(".data-add-btn").on("click", function () {
             window.location.href = '/page/book/bookCard.html';
         });
-
-        // 监听多项删除操作
-        $(".data-delete-btn").on("click", function () {
-            var checkStatus = table.checkStatus('lendTableId');
-            var data = checkStatus.data;
-            if (data.length === 0) {
-                layer.msg('请选择一行', {icon: 2});
-            } else {
-                var idList = "";
-                // 拼接id呈List
-                if (data.length > 0) {
-                    for (var i = 0; i < data.length; i++) {
-                        idList += data[i].lendId + ",";// id集
-                    }
-                }
-                layer.confirm('真的删除行么', function (index) {
-                    // 调用方法进行删除
-                    deleteById(index, idList);
-                });
-            }
-        });
-
-        /**
-         * 单行删除和多行删除
-         * @param index 确认删除询问框的索引
-         * @param idList id集合
-         * @param obj
-         */
-        function deleteById(index, idList) {
-            $.ajax({
-                url: "/lend",
-                type: "DELETE",
-                data: {'idList': idList},
-                dataType: "json",
-                success: function (data) {
-                    if (data == null) {
-                        layer.close(index);
-                        layer.msg("删除失败", {icon: 5});
-                    } else {
-                        // 重载表格
-                        tableIns.reload();
-                        //关闭弹框
-                        layer.close(index);
-                        layer.msg(data.msg, {icon: 6});
-                    }
-                },
-                error: function () {
-                    layer.msg("删除失败", {icon: 5});
-                },
-            });
-        }
-
-        // 调用方法初始化各个下拉列表的数据
-        setFormSelect();
-
-        /**
-         * 初始化下拉列表的数据
-         */
-        function setFormSelect() {
-            $.get("/userInfo", function (objs) {
-                var search_readerId = $("#search_readerId");
-                $.each(objs.data, function (index, item) {
-                    search_readerId.append("<option value=" + item.useruuid + ">" + item.name + "</option>");
-                });
-                form.render("select");
-            });
-        }
     });
 </script>
 

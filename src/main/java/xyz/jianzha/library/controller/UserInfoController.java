@@ -2,11 +2,11 @@ package xyz.jianzha.library.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import xyz.jianzha.library.entity.UserInfo;
 import xyz.jianzha.library.service.UserInfoService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
@@ -32,13 +32,17 @@ public class UserInfoController extends ApiController {
     /**
      * 分页查询所有数据
      *
-     * @param page 分页对象
+     * @param page     分页对象
      * @param userInfo 查询实体
      * @return 所有数据
      */
     @GetMapping
     public ResponseData selectAll(Page<UserInfo> page, UserInfo userInfo) {
-        return ResponseData.success(this.userInfoService.list(new QueryWrapper<>(userInfo)),"执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.userInfoService.list(new QueryWrapper<>(userInfo)), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -49,7 +53,7 @@ public class UserInfoController extends ApiController {
      */
     @GetMapping("{id}")
     public ResponseData selectOne(@PathVariable Serializable id) {
-        return ResponseData.success(this.userInfoService.getById(id),"执行成功！");
+        return ResponseData.success(this.userInfoService.getById(id), "执行成功！");
     }
 
     /**
@@ -60,7 +64,11 @@ public class UserInfoController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody UserInfo userInfo) {
-        return ResponseData.success(this.userInfoService.save(userInfo),"执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.userInfoService.save(userInfo), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -71,7 +79,11 @@ public class UserInfoController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody UserInfo userInfo) {
-        return ResponseData.success(this.userInfoService.updateById(userInfo),"执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.userInfoService.updateById(userInfo), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -82,6 +94,10 @@ public class UserInfoController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        return ResponseData.success(this.userInfoService.removeByIds(idList),"执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.userInfoService.removeByIds(idList), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 }

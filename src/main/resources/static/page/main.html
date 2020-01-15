@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <title>图书管理系统</title>
@@ -33,14 +33,6 @@
 
         <ul class="layui-nav layui-layout-left layui-header-menu layui-header-pc-menu mobile layui-hide-xs">
         </ul>
-        <ul class="layui-nav layui-layout-left layui-header-menu mobile layui-hide-sm">
-            <li class="layui-nav-item">
-                <a href="javascript:;"><i class="fa fa-list-ul"></i> 选择模块</a>
-                <dl class="layui-nav-child layui-header-mini-menu">
-                </dl>
-            </li>
-        </ul>
-
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:" data-refresh="刷新"><i class="fa fa-refresh"></i></a>
@@ -101,22 +93,20 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script src="/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script src="/js/lay-config.js" charset="utf-8"></script>
 <script>
-    layui.use(['element', 'layer', 'layuimini'], function () {
+    layui.use(['layer', 'layuimini'], function () {
         var $ = layui.jquery,
-            element = layui.element,
             layer = layui.layer;
 
         layuimini.init('../api/init.json');
 
         $('.login-out').on("click", function () {
             $.post("/logout", function (data) {
-                layer.msg(data.msg, {icon: 6}, function () {
+                layer.msg(data.msg, {icon: 6, time: 1000}, function () {
                     window.location = 'login.html';
                 });
             });

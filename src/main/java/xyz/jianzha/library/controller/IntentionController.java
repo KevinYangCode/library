@@ -8,6 +8,7 @@ import xyz.jianzha.library.service.IntentionService;
 import org.springframework.web.bind.annotation.*;
 import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
+import xyz.jianzha.library.utils.Tools;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -38,23 +39,15 @@ public class IntentionController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(Page<Intention> page, Intention intention) {
+        // MybatisPlus条件构造器
         QueryWrapper<Intention> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(intention.getName() != null && !"".equals(intention.getName()), "name", intention.getName());
-        queryWrapper.eq(intention.getSubmitter() != null && !"".equals(intention.getSubmitter()), "submitter", intention.getSubmitter());
+        queryWrapper.like(Tools.isNotEmpty(intention.getName()), "name", intention.getName());
+        queryWrapper.eq(Tools.isNotEmpty(intention.getSubmitter()), "submitter", intention.getSubmitter());
+
         Page<Intention> intentionPage = this.intentionService.page(page, queryWrapper);
+        // 获取建议者的名字
         intentionService.idToName(intentionPage.getRecords());
         return ResponseData.success(intentionPage.getRecords(), intentionPage.getTotal(), "执行成功！");
-    }
-
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("{id}")
-    public ResponseData selectOne(@PathVariable Serializable id) {
-        return ResponseData.success(this.intentionService.getById(id), "执行成功！");
     }
 
     /**
@@ -87,6 +80,7 @@ public class IntentionController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
+        // 判断是不是管理员
         if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
             return ResponseData.success(this.intentionService.removeByIds(idList), "执行成功！");
         } else {

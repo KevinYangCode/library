@@ -27,12 +27,12 @@
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" for="stuid"></label>
                     <input type="text" name="stuid" lay-verify="required|account" placeholder="请输入学号"
-                           autocomplete="off" class="layui-input" value="20170404430140">
+                           autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-password" for="password"></label>
                     <input type="password" name="password" lay-verify="required|password" placeholder="请输入密码"
-                           autocomplete="off" class="layui-input" value="123456">
+                           autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-vercode" for="captcha"></label>
@@ -94,19 +94,16 @@
                 , success: function (data) {
                     // 设置登录按钮恢复可点击在前端防止 重复点击
                     btn.text("登录").attr("disabled", false).removeClass("layui-disabled");
-                    top.layer.msg(data.msg, {time: 10000});
-                    if (data.code === 0) {
-                        window.location.href = "/page/main.html";
-                        top.layer.close(loginLoading);
-                    } else {
-                        top.layer.close(loginLoading);
-                        layer.msg(data.msg);
-                        reqCaptcha();
-                        $(".captcha").val("");
-                    }
-                }
-                , done: function () {
-                    // layer.close(loginLoading);
+                    top.layer.msg(data.msg, {icon: 6, time: 1000}, function () {
+                        if (data.code === 0) {
+                            window.location.href = "/page/main.html";
+                            top.layer.close(loginLoading);
+                        } else {
+                            top.layer.close(loginLoading);
+                            reqCaptcha();
+                            $(".captcha").val("");
+                        }
+                    });
                 }
             });
             return false;

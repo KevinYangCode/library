@@ -8,9 +8,9 @@ import xyz.jianzha.library.service.LendService;
 import org.springframework.web.bind.annotation.*;
 import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
+import xyz.jianzha.library.utils.Tools;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -39,23 +39,46 @@ public class LendController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(Page<Lend> page, Lend lend) {
-        QueryWrapper<Lend> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(lend.getBookId() != null && !"".equals(lend.getBookId()), "book_id", lend.getBookId());
-        queryWrapper.eq(lend.getReaderId() != null && !"".equals(lend.getReaderId()), "reader_id", lend.getReaderId());
-        Page<Lend> lendPage = this.lendService.page(page, queryWrapper);
-        lendService.idToName(lendPage.getRecords());
-        return ResponseData.success(lendPage.getRecords(), lendPage.getTotal(), "执行成功！");
+        return getResponseData(page, lend, lend.getReaderId());
     }
 
     /**
-     * 通过主键查询单条数据
+     * 分页查询一个用户所有数据
      *
-     * @param id 主键
-     * @return 单条数据
+     * @param page 分页对象
+     * @param lend 查询实体
+     * @return 所有数据
      */
-    @GetMapping("{id}")
-    public ResponseData selectOne(@PathVariable Serializable id) {
-        return ResponseData.success(this.lendService.getById(id), "执行成功！");
+    @GetMapping("/One")
+    public ResponseData selectOne(Page<Lend> page, Lend lend) {
+        // 获取当前用户
+        String userUuid = AuthUtils.authInfo().getUseruuid();
+        return getResponseData(page, lend, userUuid);
+    }
+
+    /**
+     * 查询分离出代码块
+     *
+     * @param page     分页条件
+     * @param lend     模糊查询条件
+     * @param userUuid 模糊查询条件或者当前用户
+     * @return
+     */
+    private ResponseData getResponseData(Page<Lend> page, Lend lend, String userUuid) {
+        // MybatisPlus条件构造器
+        QueryWrapper<Lend> queryWrapper = new QueryWrapper<>();
+        // 不为空，则是模糊查询
+        if (Tools.isNotEmpty(lend.getBookName())) {
+            // 调用方法：通过图书名称获取
+            List<Object> idList = lendService.nameToId(lend.getBookName());
+            queryWrapper.in("book_id", idList);
+        }
+        queryWrapper.eq(Tools.isNotEmpty(userUuid), "reader_id", userUuid);
+
+        Page<Lend> lendPage = this.lendService.page(page, queryWrapper);
+        // 获取借阅人的名字和书名
+        lendService.idToName(lendPage.getRecords());
+        return ResponseData.success(lendPage.getRecords(), lendPage.getTotal(), "执行成功！");
     }
 
     /**
@@ -79,6 +102,7 @@ public class LendController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Lend lend) {
+        // 判断当前用户是不是对应借阅者
         if (lend.getReaderId().equals(AuthUtils.authInfo().getUseruuid())) {
             return ResponseData.success(this.lendService.updateById(lend), "执行成功！");
         } else {
@@ -94,6 +118,7 @@ public class LendController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
+        // 判断是不是管理员
         if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
             return ResponseData.success(this.lendService.removeByIds(idList), "执行成功！");
         } else {

@@ -18,26 +18,52 @@
       "icon": "fa fa-address-book",
       "child": [
         {
-          "title": "全部图书",
+          "title": "图书使用",
           "href": "",
-          "icon": "fa fa-home",
+          "icon": "fa fa-book",
           "target": "_self",
           "child": [
             {
               "title": "图书卡片",
               "href": "/page/book/bookCard.html",
-              "icon": "fa fa-file-text",
-              "target": "_self"
-            },
-            {
-              "title": "新书采购意向",
-              "href": "/page/book/intentionList.html",
-              "icon": "fa fa-file-text",
+              "icon": "fa fa-reorder",
               "target": "_self"
             },
             {
               "title": "全部借阅",
               "href": "/page/book/lendList.html",
+              "icon": "fa fa-reorder",
+              "target": "_self"
+            },
+            {
+              "title": "新书采购意向",
+              "href": "/page/book/intentionList.html",
+              "icon": "fa fa-reorder",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "我的管理",
+          "href": "",
+          "icon": "fa fa-bar-chart",
+          "target": "_self",
+          "child": [
+            {
+              "title": "我的借阅",
+              "href": "/page/user/MyLend.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
+              "title": "用户设置",
+              "href": "/page/user/user-setting.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
+              "title": "密码",
+              "href": "/page/user/user-password.html",
               "icon": "fa fa-file-text",
               "target": "_self"
             }
@@ -46,51 +72,31 @@
         {
           "title": "系统管理",
           "href": "",
-          "icon": "fa fa-home",
+          "icon": "fa fa-list-ul",
           "target": "_self",
           "child": [
             {
               "title": "图书列表",
               "href": "/page/system/bookList.html",
-              "icon": "fa fa-file-text",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
+              "title": "用户列表",
+              "href": "/page/system/userList.html",
+              "icon": "fa fa-list-alt",
               "target": "_self"
             },
             {
               "title": "分类管理",
               "href": "/page/system/classifyList.html",
-              "icon": "fa fa-file-text",
+              "icon": "fa fa-list-alt",
               "target": "_self"
             },
             {
               "title": "书架管理",
               "href": "/page/system/bookshelfList.html",
-              "icon": "fa fa-file-text",
-              "target": "_self"
-            }
-          ]
-        },
-        {
-          "title": "用户管理",
-          "href": "",
-          "icon": "fa fa-home",
-          "target": "_self",
-          "child": [
-            {
-              "title": "我的借阅",
-              "href": "/page/book/lendList.html",
-              "icon": "fa fa-file-text",
-              "target": "_self"
-            },
-            {
-              "title": "用户设置",
-              "href": "/page/user/user-password.html",
-              "icon": "fa fa-file-text",
-              "target": "_self"
-            },
-            {
-              "title": "密码",
-              "href": "/page/user/user-setting.html",
-              "icon": "fa fa-file-text",
+              "icon": "fa fa-list-alt",
               "target": "_self"
             }
           ]
@@ -98,7 +104,7 @@
         {
           "title": "异常页面",
           "href": "",
-          "icon": "fa fa-home",
+          "icon": "fa fa-th-list",
           "target": "_self",
           "child": [
             {

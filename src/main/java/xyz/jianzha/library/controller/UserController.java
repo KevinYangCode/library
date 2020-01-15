@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import xyz.jianzha.library.entity.User;
 import xyz.jianzha.library.service.UserService;
 import org.springframework.web.bind.annotation.*;
+import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
@@ -35,7 +36,11 @@ public class UserController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(User user) {
-        return ResponseData.success(this.userService.list(new QueryWrapper<>(user)), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.userService.list(new QueryWrapper<>(user)), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -57,7 +62,11 @@ public class UserController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody User user) {
-        return ResponseData.success(this.userService.save(user), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.userService.save(user), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -68,7 +77,11 @@ public class UserController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody User user) {
-        return ResponseData.success(this.userService.updateById(user), "执行成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            return ResponseData.success(this.userService.updateById(user), "执行成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 
     /**
@@ -79,7 +92,11 @@ public class UserController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
-        this.userService.removeByIds(idList);
-        return ResponseData.success("删除成功！");
+        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
+            this.userService.removeByIds(idList);
+            return ResponseData.success("删除成功！");
+        } else {
+            return ResponseData.fail("没有权限！");
+        }
     }
 }

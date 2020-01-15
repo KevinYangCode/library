@@ -7,6 +7,15 @@ spring:
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 3
+    minIdle: 3
+    maxActive: 30
+    maxWait: 20000
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 100
+    connectionInitSqls: SELETE 1
+    filters: stat,wall,slf4j
+
   #处理时间
   jackson:
     date-format: yyyy-MM-dd
@@ -24,3 +33,7 @@ mybatis-plus:
   global-config:
     db-config:
       table-prefix: "t_"
+
+logging:
+  level:
+    root: info

@@ -129,7 +129,6 @@ layui.define(["element", "jquery"], function (exports) {
          */
         this.initMenu = function (data) {
             var headerMenuHtml = '',
-                headerMobileMenuHtml = '',
                 leftMenuHtml = '',
                 headerMenuCheckDefault = 'layui-this',
                 leftMenuCheckDefault = 'layui-this';
@@ -137,7 +136,6 @@ layui.define(["element", "jquery"], function (exports) {
 
             $.each(data, function (key, val) {
                 headerMenuHtml += '<li class="layui-nav-item ' + headerMenuCheckDefault + '" id="' + key + 'HeaderId" data-menu="' + key + '"> <a href="javascript:;"><i class="' + val.icon + '"></i> ' + val.title + '</a> </li>\n';
-                headerMobileMenuHtml += '<dd><a href="javascript:;" id="' + key + 'HeaderId" data-menu="' + key + '"><i class="' + val.icon + '"></i> ' + val.title + '</a></dd>\n';
                 leftMenuHtml += '<ul class="layui-nav layui-nav-tree layui-left-nav-tree ' + leftMenuCheckDefault + '" id="' + key + '">\n';
                 var menuList = val.child;
                 $.each(menuList, function (index, menu) {
@@ -173,7 +171,6 @@ layui.define(["element", "jquery"], function (exports) {
                 leftMenuCheckDefault = 'layui-hide';
             });
             $('.layui-header-pc-menu').html(headerMenuHtml); //电脑
-            $('.layui-header-mini-menu').html(headerMobileMenuHtml); //手机
             $('.layui-left-menu').html(leftMenuHtml);
             element.init();
         };

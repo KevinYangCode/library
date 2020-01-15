@@ -1,7 +1,6 @@
 package xyz.jianzha.library.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.jianzha.library.entity.Intention;
 import xyz.jianzha.library.entity.Lend;
 
 import java.util.List;
@@ -14,4 +13,7 @@ import java.util.List;
  */
 public interface LendService extends IService<Lend> {
     void idToName(List<Lend> records);
+
+    List<Object> nameToId(String name);
+
 }

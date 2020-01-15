@@ -231,13 +231,6 @@
 
         // 监听弹出层中的确认事件
         form.on("submit(doSubmit)", function (data) {
-            // 修改开关的值on或""
-            // 我们要保存1/0而已；
-            // if (data.field.status === "on") {
-            //     data.field.status = "1";
-            // } else {
-            //     data.field.status = "0";
-            // }
             data = JSON.stringify(data.field);
             var inteIds = JSON.parse(data)["inteId"];
             // inteId不为空就执行修改操作
@@ -249,7 +242,7 @@
                     , dataType: "json"
                     , contentType: "application/json; charset=utf-8"
                     , success: function (data) {
-                        layer.msg(data.msg, {icon: 6});
+                        layer.msg(data.msg, {icon: 6, time: 1000});
                         // 重载表格
                         tableIns.reload();
                         // 关闭修改弹窗
@@ -265,17 +258,18 @@
                     , dataType: "json"
                     , contentType: "application/json; charset=utf-8"
                     , success: function (data) {
-                        layer.msg(data.msg, {icon: 6});
-                        if (data.code === 0) {
-                            layer.confirm('是否继续录入？', {
-                                btn: ['继续', '取消'] //按钮
-                            }, function (index) {
-                                $("#intentionForm")[0].reset();
-                                layer.close(index);
-                            }, function () {
-                                layer.close(addFormIndex);
-                            });
-                        }
+                        layer.msg(data.msg, {icon: 6, time: 1000}, function () {
+                            if (data.code === 0) {
+                                layer.confirm('是否继续录入？', {
+                                    btn: ['继续', '取消'] //按钮
+                                }, function (index) {
+                                    $("#intentionForm")[0].reset();
+                                    layer.close(index);
+                                }, function () {
+                                    layer.close(addFormIndex);
+                                });
+                            }
+                        });
                         // 重载表格
                         tableIns.reload();
                         $("#intentionForm")[0].reset();
@@ -360,9 +354,6 @@
          * @param data 当前行数据
          */
         function setFormValue(data) {
-            // if (data.status !== 1) {
-            //     data.status = "";
-            // }
             popForm.val("form-edit", {
                 "inteId": data.inteId
                 , "name": data.name

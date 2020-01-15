@@ -1,6 +1,5 @@
 package xyz.jianzha.library.config.shiro;
 
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -75,6 +74,8 @@ public class ShiroConfig {
         filterMap.put("/page/login.html", "anon");
         // 登出
         filterMap.put("/shiro/logout", "logout");
+        // druid后端监控录路径
+        filterMap.put("/druid/**", "anon");
 
         // 授权过滤器
         // 注意：当前授权拦截后，shiro会自动跳转到未授权页面
@@ -92,6 +93,8 @@ public class ShiroConfig {
     }
 
     /**
+     * 使用MD5加密
+     *
      * @return
      */
     @Bean("hashedCredentialsMatcher")
@@ -103,15 +106,4 @@ public class ShiroConfig {
         matcher.setHashIterations(1024);
         return matcher;
     }
-
-    /**
-     * 配置ShiroDialect，用于thymeleaf和shiro标签配合使用
-     *
-     * @return
-     */
-    @Bean
-    public ShiroDialect getShiroDialect() {
-        return new ShiroDialect();
-    }
-
 }

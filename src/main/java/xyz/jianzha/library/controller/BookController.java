@@ -6,17 +6,15 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import xyz.jianzha.library.entity.Book;
-import xyz.jianzha.library.entity.Lend;
 import xyz.jianzha.library.service.BookService;
 import org.springframework.web.bind.annotation.*;
-import xyz.jianzha.library.service.LendService;
 import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
+import xyz.jianzha.library.utils.Tools;
 import xyz.jianzha.library.vo.BookVo;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,8 +32,6 @@ public class BookController extends ApiController {
      */
     @Resource
     private BookService bookService;
-    @Resource
-    private LendService lendService;
 
     /**
      * 查询所有数据
@@ -45,21 +41,22 @@ public class BookController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(BookVo bookVo) {
+        // MybatisPlus条件构造器
         QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(bookVo.getName() != null && !"".equals(bookVo.getName()), "name", bookVo.getName());
-        queryWrapper.eq(bookVo.getClassId() != null && !"".equals(bookVo.getClassId()), "class_id", bookVo.getClassId());
+        queryWrapper.like(Tools.isNotEmpty(bookVo.getName()), "name", bookVo.getName());
+        queryWrapper.eq(Tools.isNotEmpty(bookVo.getClassId()), "class_id", bookVo.getClassId());
         // 判断是否参数是否带有分页条件
-        if (bookVo.getCurrent() == null || "".equals(bookVo.getCurrent()) || bookVo.getSize() == null || "".equals(bookVo.getSize())) {
+        if (Tools.isEmpty(bookVo.getCurrent()) || Tools.isEmpty(bookVo.getSize())) {
             // 不分页查询
             List<Book> list = bookService.list(queryWrapper);
-            // 调用方法（根据ID查找对应的名称）
+            // 调用方法（根据ID查找书架名和分类名）
             bookService.idToName(list);
             return ResponseData.success(list, list.size(), "执行成功！");
         } else {
             // 分页查询
             IPage<Book> bookPage = new Page<>(bookVo.getCurrent(), bookVo.getSize());
             bookPage = bookService.page(bookPage, queryWrapper);
-            // 调用方法（根据ID查找对应的名称）
+            // 调用方法（根据ID查找书架名和分类名）
             bookService.idToName(bookPage.getRecords());
             return ResponseData.success(bookPage.getRecords(), bookPage.getTotal(), "执行成功！");
         }
@@ -111,10 +108,6 @@ public class BookController extends ApiController {
             }
         } else {
             // 借阅操作
-            System.err.println("====================");
-            System.err.println(book.getBookId());
-            System.err.println(book.getStatus());
-            System.err.println("====================");
             return ResponseData.success(this.bookService.updateById(book), "执行成功！");
         }
     }

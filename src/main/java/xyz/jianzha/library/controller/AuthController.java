@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
+ * 使用shiro认证
+ *
  * @author Y_Kevin
  * @date 2020-01-11 14:48
  */

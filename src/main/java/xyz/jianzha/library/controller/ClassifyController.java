@@ -9,7 +9,6 @@ import xyz.jianzha.library.utils.AuthUtils;
 import xyz.jianzha.library.utils.ResponseData;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -40,17 +39,6 @@ public class ClassifyController extends ApiController {
     }
 
     /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("{id}")
-    public ResponseData selectOne(@PathVariable Serializable id) {
-        return ResponseData.success(this.classifyService.getById(id), "执行成功！");
-    }
-
-    /**
      * 新增数据
      *
      * @param classify 实体对象
@@ -58,6 +46,7 @@ public class ClassifyController extends ApiController {
      */
     @PostMapping
     public ResponseData insert(@RequestBody Classify classify) {
+        // 判断是不是管理员
         if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
             return ResponseData.success(this.classifyService.save(classify), "执行成功！");
         } else {
@@ -73,6 +62,7 @@ public class ClassifyController extends ApiController {
      */
     @PutMapping
     public ResponseData update(@RequestBody Classify classify) {
+        // 判断是不是管理员
         if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
             return ResponseData.success(this.classifyService.updateById(classify), "执行成功！");
         } else {
@@ -88,8 +78,15 @@ public class ClassifyController extends ApiController {
      */
     @DeleteMapping
     public ResponseData delete(@RequestParam("idList") List<Long> idList) {
+        // 判断是不是管理员
         if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
-            return ResponseData.success(this.classifyService.removeByIds(idList), "执行成功！");
+            // 如果绑定这个id就不允许删除
+            boolean b = classifyService.canDelete(idList);
+            if (b) {
+                return ResponseData.success(this.classifyService.removeByIds(idList), "执行成功！");
+            } else {
+                return ResponseData.fail("删除错误，请逐个删除，或者其他内容使用到该分类");
+            }
         } else {
             return ResponseData.fail("没有权限！");
         }
