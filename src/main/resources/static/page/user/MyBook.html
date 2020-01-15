@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>图书列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+    <style>
+        /**设置下拉框的高度，否则弹窗是会超出来 */
+        .layui-form-select dl {
+            max-height: 180px;
+        }
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">图书名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-inline">
+                                <select name="classId" id="search_classid" lay-filter="classifys" lay-search="">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <a class="layui-btn" lay-submit="" lay-filter="doSerach">搜索</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <div class="layui-btn-group">
+            <button class="layui-btn data-add-btn">添加</button>
+        </div>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+        </script>
+    </div>
+</div>
+
+<!-- 添加和编辑的弹出层页面(设置了style="display: none;" 可以令页面初始化不呈现) -->
+<div id="edit-tpl" style="margin: 20px; display: none;">
+    <form id="dataForm" lay-filter="form-edit" class="layui-form  layui-form-pane">
+        <!-- 隐藏ID，便于修改操作 -->
+        <div class="layui-form-item layui-hide">
+            <input type="text" class="layui-input" name="bookId"/>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">图书名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" placeholder="请输入图书名称" lay-verify="required" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">作者</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="author" placeholder="请输入作者" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出版社</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="publish" placeholder="请输入出版社" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">标准书号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="isbn" placeholder="请输入标准书号" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">价格</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="price" lay-verify="number" placeholder="请输入价格" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">出版时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="pubDate" id="pubDate" readonly="readonly" placeholder="yyyy-MM-dd"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">分类号</label>
+                <div class="layui-input-inline">
+                    <select name="classId" id="edit_classid" lay-search="">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">位置号</label>
+                <div class="layui-input-inline">
+                    <select name="location" id="edit_location" lay-search="">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">图书状态</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" checked="" name="status" lay-skin="switch" lay-text="在架|已借出">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">拥有者</label>
+                <div class="layui-input-inline">
+                    <select name="owner" id="edit_ownerid" lay-search="">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">简介--(图片没做,暂时都为/images/spring4.png)</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入简介" name="introduction" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">图片路径</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="pic" autocomplete="off"
+                           class="layui-input" value="/images/spring4.png">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <button type="button" class="layui-btn" lay-submit="" lay-filter="doSubmit" value="确认"></button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+
+<script src="/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script>
+    // 搞个值，用于修改表单的赋值
+    var popForm;
+    layui.use(['form', 'table', 'layer', 'jquery', 'laydate'], function () {
+        var $ = layui.jquery
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , table = layui.table;
+        popForm = layui.form;
+
+        // 初始化，表单里的时间组件
+        laydate.render({
+            elem: '#pubDate',
+            type: 'date'
+        });
+
+        // 创建数据表格
+        var tableIns = table.render({
+            elem: '#currentTableId'
+            , url: '/book/One'
+            , limits: [8, 16, 20, 25, 50, 100]
+            , limit: 8
+            , page: true
+            , cols: [[
+                {type: "checkbox", width: 40, fixed: "left"},
+                {field: 'bookId', width: 50, title: 'ID', align: 'center'},
+                {field: 'name', title: '书名', align: 'center'},
+                {field: 'author', title: '作者', align: 'center'},
+                {field: 'publish', title: '出版社', align: 'center'},
+                {field: 'isbn', width: 135, title: '标准书号', align: 'center'},
+                // {field: 'introduction', title: '简介', minWidth: 150, align: 'center'},
+                {field: 'price', width: 75, title: '价格', sort: true, align: 'center'},
+                {field: 'pubDate', title: '出版时间', align: 'center'},
+                // {field: 'classId', title: '分类号', align: 'center'},
+                {field: 'className', title: '分类名称', align: 'center'},
+                // {field: 'pic', title: '封面图片', align: 'center'},
+                // {field: 'location', title: '位置', align: 'center'},
+                {field: 'locationName', title: '位置', align: 'center'},
+                // {field: 'status', title: '图书状态', align: 'center'},
+                // {field: 'owner', title: '拥有者', align: 'center'},
+                {title: '操作', minWidth: 50, templet: '#currentTableBar', fixed: "right", align: "center"}
+            ]]
+            , request: {
+                pageName: 'current' //页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
+            }
+        });
+
+        //模糊查询
+        form.on("submit(doSerach)", function (data) {
+            tableIns.reload({
+                url: '/book/One'
+                , where: data.field
+                , page: {
+                    curr: 1
+                }
+            });
+            //阻止表单跳转
+            return false;
+        });
+
+        // 监听列工具操作
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                editFormIndex = layer.open({
+                    btn: ['提交', '重置', '取消']
+                    , title: '编辑用户'
+                    , area: ['700px', '520px']
+                    , type: 1
+                    , id: (new Date()).valueOf()
+                    , resize: false
+                    , content: $("#edit-tpl")
+                    , success: function () {
+                    }
+                    , yes: function (index, layero) {
+                        $('form[lay-filter="form-edit"]').find('button[lay-submit]').click();
+                    }
+                    , btn2: function (index, layero) {
+                        $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
+                        // 禁止点击该按钮关闭
+                        return false;
+                    }
+                    , end: function () {
+                        //关闭弹窗，清空表单数据
+                        $("#dataForm")[0].reset();
+                    }
+                });
+                //调用方法，动态向编辑表单赋值
+                setFormValue(data);
+            }
+        });
+
+        // 添加页面弹出层索引
+        var addFormIndex;
+        // 修改页面弹出层索引
+        var editFormIndex;
+
+        // 打开添加页面
+        $(".data-add-btn").on("click", function () {
+            addFormIndex = layer.open({
+                btn: ['添加', '重置', '取消']
+                , title: '添加图书'
+                , area: ['700px', '520px']
+                , type: 1
+                , resize: false
+                , content: $("#edit-tpl")
+                , success: function () {
+                    form.render(null, 'form-edit');
+                }
+                , yes: function (index, layero) {
+                    $('form[lay-filter="form-edit"]').find('button[lay-submit]').click();
+                }
+                , btn2: function (index, layero) {
+                    $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
+                    return false; // 禁止点击该按钮关闭
+                }
+                , end: function () {
+                    $("#dataForm")[0].reset();
+                }
+            });
+        });
+
+        // 监听弹出层中的确认事件
+        form.on("submit(doSubmit)", function (data) {
+            // 修改开关的值on或""
+            // 我们要保存1/0而已；
+            if (data.field.status === "on") {
+                data.field.status = "1";
+            } else {
+                data.field.status = "0";
+            }
+            data = JSON.stringify(data.field);
+            var bookIds = JSON.parse(data)["bookId"];
+            // bookId不为空就执行修改操作
+            if (bookIds != null && bookIds !== "") {
+                $.ajax({
+                    url: "/book"
+                    , type: "PUT"
+                    , data: data
+                    , dataType: "json"
+                    , contentType: "application/json; charset=utf-8"
+                    , success: function (data) {
+                        layer.msg(data.msg, {icon: 6, time: 1000}, function () {
+                            // 重载表格
+                            tableIns.reload();
+                            // 关闭修改弹窗
+                        });
+                        layer.close(editFormIndex);
+                    }
+                });
+            } else {
+                // bookId为空就执行添加操作
+                $.ajax({
+                    url: "/book"
+                    , type: "POST"
+                    , data: data
+                    , dataType: "json"
+                    , contentType: "application/json; charset=utf-8"
+                    , success: function (data) {
+                        layer.msg(data.msg, {icon: 6, time: 1000}, function () {
+                            if (data.code === 0) {
+                                layer.confirm('是否继续录入？', {
+                                    btn: ['继续', '取消'] //按钮
+                                }, function (index) {
+                                    $("#dataForm")[0].reset();
+                                    layer.close(index);
+                                }, function () {
+                                    layer.close(addFormIndex);
+                                });
+                            }
+                        });
+                        // 重载表格
+                        tableIns.reload();
+                        $("#dataForm")[0].reset();
+                    }
+                });
+            }
+            //阻止表单跳转
+            return false;
+        });
+
+        // 调用方法初始化各个下拉列表的数据
+        setFormSelect();
+
+        /**
+         * 初始化下拉列表的数据
+         */
+        function setFormSelect() {
+            $.get("/classify", function (objs) {
+                var edit_classid = $("#edit_classid");
+                var search_classid = $("#search_classid");
+                $.each(objs.data, function (index, item) {
+                    edit_classid.append("<option value=" + item.classId + ">" + item.className + "</option>");
+                    search_classid.append("<option value=" + item.classId + ">" + item.className + "</option>");
+                });
+                form.render("select");
+            });
+            $.get("/bookshelf", function (objs) {
+                var edit_location = $("#edit_location");
+                $.each(objs.data, function (index, item) {
+                    edit_location.append("<option value=" + item.bsId + ">" + item.name + "</option>");
+                });
+                form.render("select");
+            });
+            $.get("/userInfo", function (objs) {
+                var edit_ownerid = $("#edit_ownerid");
+                $.each(objs.data, function (index, item) {
+                    edit_ownerid.append("<option value=" + item.useruuid + ">" + item.name + "</option>");
+                });
+                form.render("select");
+            });
+        }
+
+        /**
+         * 动态给修改页面赋值
+         * @param data 当前行数据
+         */
+        function setFormValue(data) {
+            if (data.status !== 1) {
+                data.status = "";
+            }
+            popForm.val("form-edit", {
+                "bookId": data.bookId
+                , "name": data.name
+                , "author": data.author
+                , "publish": data.publish
+                , "isbn": data.isbn
+                , "price": data.price
+                , "pubDate": data.pubDate
+                , "classId": data.classId
+                , "location": data.location
+                , "status": data.status
+                , "owner": data.owner
+                , "introduction": data.introduction
+                , "pic": data.pic
+            });
+            popForm.render(null, 'form-edit')
+        }
+    });
+</script>
+
+</body>
+</html>

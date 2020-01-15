@@ -50,6 +50,12 @@
           "target": "_self",
           "child": [
             {
+              "title": "我的图书",
+              "href": "/page/user/MyBook.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
               "title": "我的借阅",
               "href": "/page/user/MyLend.html",
               "icon": "fa fa-file-text",
@@ -82,12 +88,6 @@
               "target": "_self"
             },
             {
-              "title": "用户列表",
-              "href": "/page/system/userList.html",
-              "icon": "fa fa-list-alt",
-              "target": "_self"
-            },
-            {
               "title": "分类管理",
               "href": "/page/system/classifyList.html",
               "icon": "fa fa-list-alt",
@@ -96,6 +96,12 @@
             {
               "title": "书架管理",
               "href": "/page/system/bookshelfList.html",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
+              "title": "用户列表",
+              "href": "/page/system/userList.html",
               "icon": "fa fa-list-alt",
               "target": "_self"
             }

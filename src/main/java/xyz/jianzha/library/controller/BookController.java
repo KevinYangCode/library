@@ -63,6 +63,30 @@ public class BookController extends ApiController {
     }
 
     /**
+     * 查询属于单个用户的图书
+     *
+     * @param bookVo 查询实体
+     * @return 所有数据
+     */
+    @GetMapping("/One")
+    public ResponseData selectOne(BookVo bookVo) {
+        // MybatisPlus条件构造器
+        QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(Tools.isNotEmpty(bookVo.getName()), "name", bookVo.getName());
+        queryWrapper.eq(Tools.isNotEmpty(bookVo.getClassId()), "class_id", bookVo.getClassId());
+        // 获取当前用户
+        String userUuid = AuthUtils.authInfo().getUseruuid();
+        queryWrapper.eq("owner", userUuid);
+        // 分页查询
+        IPage<Book> bookPage = new Page<>(bookVo.getCurrent(), bookVo.getSize());
+        bookPage = bookService.page(bookPage, queryWrapper);
+        // 调用方法（根据ID查找书架名和分类名）
+        bookService.idToName(bookPage.getRecords());
+        return ResponseData.success(bookPage.getRecords(), bookPage.getTotal(), "执行成功！");
+
+    }
+
+    /**
      * 通过主键查询单条数据
      *
      * @param id 主键
