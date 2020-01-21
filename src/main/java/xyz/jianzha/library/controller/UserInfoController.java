@@ -38,11 +38,7 @@ public class UserInfoController extends ApiController {
      */
     @GetMapping
     public ResponseData selectAll(Page<UserInfo> page, UserInfo userInfo) {
-        if (AuthUtils.authInfo().getRole() == 1 || AuthUtils.authInfo().getRole() == 2) {
-            return ResponseData.success(this.userInfoService.list(new QueryWrapper<>(userInfo)), "执行成功！");
-        } else {
-            return ResponseData.fail("没有权限！");
-        }
+        return ResponseData.success(this.userInfoService.list(new QueryWrapper<>(userInfo)), "执行成功！");
     }
 
     /**

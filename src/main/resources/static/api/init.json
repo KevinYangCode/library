@@ -128,24 +128,6 @@
           ]
         }
       ]
-    },
-    "component": {
-      "title": "组件管理",
-      "icon": "fa fa-lemon-o",
-      "child": [
-        {
-          "title": "图标列表",
-          "href": "/page/persistence/icon.html",
-          "icon": "fa fa-dot-circle-o",
-          "target": "_self"
-        },
-        {
-          "title": "文件上传",
-          "href": "/page/persistence/upload.html",
-          "icon": "fa fa-arrow-up",
-          "target": "_self"
-        }
-      ]
     }
   }
 }

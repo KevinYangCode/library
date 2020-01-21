@@ -1,0 +1,31 @@
+{
+  "code": "10000",
+  "charge": false,
+  "remain": 1305,
+  "msg": "查询成功",
+  "result": {
+    "status": "0",
+    "msg": "ok",
+    "result": {
+      "title": "有理想就有疼痛",
+      "subtitle": "中国当代文化名人访谈录",
+      "pic": "https://img11.360buyimg.com/n1/jfs/t6028/153/757041799/410919/1d6eab95/592bf16fN150235d2.jpg",
+      "author": "高晓春",
+      "summary": "《有理想就有疼痛:中国当代文化名人访谈录》是一份关于当代中国文化的最真实底稿，收录了高晓春与白先勇、冯骥才、余华、莫言、余秋雨、陈忠实等20位当代中国文化大家的对话。通过近距离的访谈，展现了这些文化大家多彩的内心世界，也阐释了他们对生命、艺术、财富及文化的理解。",
+      "publisher": "",
+      "pubplace": "",
+      "pubdate": "2013-1",
+      "page": "256",
+      "price": "29.00",
+      "binding": "",
+      "isbn": "9787212058937",
+      "isbn10": "7212058939",
+      "keyword": "",
+      "edition": "",
+      "impression": "",
+      "language": "",
+      "format": "",
+      "class": ""
+    }
+  }
+}

@@ -10,7 +10,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="/lib/layui-v2.5.5/css/layui.css" media="all">
     <link rel="stylesheet" href="/css/layuimini.css" media="all">
     <link rel="stylesheet" href="/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
@@ -52,7 +51,7 @@
                            data-icon="fa fa-gears">修改密码</a>
                     </dd>
                     <dd>
-                        <a href="javascript:" class="login-out">退出登录</a>
+                        <a href="/shiro/logout" class="login-out">退出登录</a>
                     </dd>
                 </dl>
             </li>
@@ -103,14 +102,6 @@
             layer = layui.layer;
 
         layuimini.init('../api/init.json');
-
-        $('.login-out').on("click", function () {
-            $.post("/logout", function (data) {
-                layer.msg(data.msg, {icon: 6, time: 1000}, function () {
-                    window.location = 'login.html';
-                });
-            });
-        });
     });
 </script>
 </body>

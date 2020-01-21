@@ -7,12 +7,14 @@
 密码：123456
 
 druid监控面板：http://localhost:8080/druid/index.html
+
 swaggerAPI：http://localhost:8080/swagger-ui.html
+
 ## 技术
 
 | 描述         | 框架                | 版本          |
 |: ------------ :|: -------------- :|: ---------- :|
-| 后台框架   | SpringBoot| 2.2.0.RELEASE |
+| 后台框架   | SpringBoot| 2.2.2.RELEASE |
 | mybatis工具 | mybatisplus| 3.3.0 |
 |数据库连接池|druid|1.1.20|
 |认证权限管理|shiro|1.4.2|
@@ -60,7 +62,7 @@ swaggerAPI：http://localhost:8080/swagger-ui.html
 | class_id     | int      | 11   | 0      | 否   | 分类号                |      |
 | pic          | longtext | 0    | 0      | 是   | 封面图片              |      |
 | location     | int      | 11   | 0      | 否   | 位置                  |      |
-| status       | int      | 2    | 0      | 否   | 图书状态(0在架/1借出) |      |
+| status       | int      | 2    | 0      | 否   | 图书状态(1在架/0借出) |      |
 | owner        | varchar  | 32   | 0      | 否   | 拥有者(0/1)           |      |
 
 ### 2、用户登录表t_user
@@ -107,7 +109,7 @@ swaggerAPI：http://localhost:8080/swagger-ui.html
 ## 没做
 - 用户管理
 - 还书时弹窗显示应放那一层书架
-- ？？扫码录入书籍（小程序调用微信中的扫一扫功能）
+- 扫码录入书籍（小程序调用微信中的扫一扫功能）([已完成](https://github.com/KevinYangCode/isbnGetInfo))
 - ？？处理t_book表的拥有者：工作室/未知/成员
 - 页面用户的名字显示
 

@@ -85,7 +85,6 @@
             var btn = $(this);
             //设置登录按钮  为不可点击
             btn.text("登录中...").attr("disabled", "disabled").addClass("layui-disabled");
-            console.log(JSON.stringify(data.field));
             $.ajax({
                 url: "/login"
                 , type: "POST"
