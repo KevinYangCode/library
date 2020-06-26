@@ -13,7 +13,7 @@ swaggerAPI：http://localhost:8080/swagger-ui.html
 ## 技术
 
 | 描述         | 框架                | 版本          |
-|: ------------ :|: -------------- :|: ---------- :|
+| ------------ | -------------- | ---------- |
 | 后台框架   | SpringBoot| 2.2.2.RELEASE |
 | mybatis工具 | mybatisplus| 3.3.0 |
 |数据库连接池|druid|1.1.20|
